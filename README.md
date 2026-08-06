@@ -180,6 +180,28 @@ php artisan reverb:start
   two-tone chime via the Web Audio API when a notification arrives, so no
   external audio file is needed either.
 
+## Branded password reset email
+
+Laravel's default password-reset notification is a plain, unstyled email.
+This project overrides it with a fully custom, Blood Link–branded HTML
+template instead:
+
+- `app/Notifications/ResetPasswordNotification.php` — a custom notification
+  that renders `resources/views/emails/reset-password.blade.php` (a
+  table-based HTML layout, inline-styled for email client compatibility)
+  rather than Laravel's default Markdown mail component.
+- `User::sendPasswordResetNotification()` is overridden in `app/Models/User.php`
+  to dispatch this custom notification instead of the framework default —
+  no other code needs to change; `Password::sendResetLink()` in
+  `AuthController` calls this automatically.
+- The email uses the same crimson/paper palette as the rest of the app, a
+  clear "Reset Password" button, the fallback plain-text link, an expiry
+  note, and a "didn't request this?" safety line.
+- Because email clients (especially Outlook desktop) don't reliably render
+  webfonts, external CSS, or SVGs, the template sticks to web-safe fonts,
+  inline styles, and a plain-text 🩸 wordmark instead of the SVG pulse mark
+  used elsewhere in the app.
+
 ## Default logins after seeding
 
 | Role  | Email                   | Password |

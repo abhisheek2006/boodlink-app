@@ -177,9 +177,9 @@ class AuthController extends Controller
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
-                $user->forceFill(['password' => Hash::make($password)])
-                    ->setRememberToken(Str::random(60))
-                    ->save();
+                $user->forceFill(['password' => Hash::make($password)]);
+                $user->setRememberToken(Str::random(60));
+                $user->save();
             }
         );
 

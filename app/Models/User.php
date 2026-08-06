@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -124,5 +125,11 @@ class User extends Authenticatable
             'Donor' => 'donor.dashboard',
             'Patient' => 'patient.dashboard',
         };
+    }
+
+    /** Send our own branded reset email instead of Laravel's plain default. */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

@@ -1,8 +1,13 @@
 *.log
+*.swp
+*.swo
+*~
 .DS_Store
 .env
 .env.backup
+.env.local
 .env.production
+.env.*.local
 .phpactor.json
 .phpunit.result.cache
 /.codex
@@ -13,7 +18,12 @@
 /.vscode
 /.zed
 /auth.json
+/composer.phar
 /node_modules
+/npm-debug.log*
+/pnpm-debug.log*
+/yarn-debug.log*
+/yarn-error.log*
 /public/build
 /public/fonts-manifest.dev.json
 /public/hot
