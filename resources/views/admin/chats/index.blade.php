@@ -36,8 +36,8 @@
         <tbody>
             @forelse ($sessions as $session)
                 <tr>
-                    <td>{{ $session->donor->user->name }}</td>
-                    <td>{{ $session->patient->user->name }}</td>
+                    <td>{{ $session->donor?->user?->name ?? '—' }}</td>
+                    <td>{{ $session->patient?->user?->name ?? '—' }}</td>
                     <td>
                         <span class="badge bg-{{ match($session->status) { 'Active' => 'info', 'Completed' => 'success', 'Cancelled' => 'secondary', 'Expired' => 'warning', default => 'secondary' } }}">
                             {{ $session->status }}
