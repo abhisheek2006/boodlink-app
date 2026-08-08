@@ -8,7 +8,7 @@
     $other = $isDonorSide ? $session->patient->user : $session->donor->user;
 @endphp
 
-<div class="card">
+<div class="card border-0 shadow-sm">
     <div class="card-header d-flex align-items-center justify-content-between bg-white">
         <div class="d-flex align-items-center gap-2">
             <i class="bi bi-person-circle fs-3 text-secondary"></i>

@@ -8,37 +8,37 @@
 
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-6">
-        <div class="card p-3">
-            <div class="text-muted small">Blood Group</div>
-            <div class="fs-4 fw-bold">{{ $donor->bloodGroup->name }}</div>
+        <div class="stat-card h-100">
+            <div class="stat-value" style="color: var(--bl-primary);">{{ $donor->bloodGroup->name }}</div>
+            <div class="stat-label">Blood Group</div>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3">
-            <div class="text-muted small">Status</div>
-            <div class="fs-5 fw-bold">
+        <div class="stat-card h-100">
+            <div class="stat-value" style="font-size: 1.4rem;">
                 <span class="badge {{ $donor->availability === 'Available' ? 'bg-success' : ($donor->availability === 'Busy' ? 'bg-danger' : 'bg-warning text-dark') }}">
                     {{ $donor->availability }}
                 </span>
             </div>
+            <div class="stat-label">Status</div>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3">
-            <div class="text-muted small">Total Donations</div>
-            <div class="fs-4 fw-bold">{{ $donor->total_donations }}</div>
+        <div class="stat-card h-100">
+            <div class="stat-value">{{ $donor->total_donations }}</div>
+            <div class="stat-label">Total Donations</div>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3">
-            <div class="text-muted small">Badge / Rank</div>
-            <div class="fs-6 fw-bold">{{ $donor->current_badge ?? 'No Badge' }} &middot; #{{ $donor->current_rank ?? '-' }}</div>
+        <div class="stat-card h-100">
+            <div class="stat-value" style="font-size: 1.1rem;">{{ $donor->current_badge ?? 'No Badge' }} &middot; #{{ $donor->current_rank ?? '-' }}</div>
+            <div class="stat-label">Badge / Rank</div>
         </div>
     </div>
 </div>
 
 @if ($donor->availability === 'Waiting')
-    <div class="alert alert-warning">
+    <div class="alert alert-warning border-0 mb-4">
         Last Donation: {{ optional($donor->last_donation_date)->toFormattedDateString() }} —
         Next Eligible: {{ optional($donor->next_eligible_date)->toFormattedDateString() }}
         ({{ $donor->remainingCooldownDays() }} day(s) remaining)
@@ -46,10 +46,12 @@
 @endif
 
 @if ($activeSession)
-    <div class="card p-3 mb-4 border-danger">
-        <h6><i class="bi bi-chat-dots"></i> Active Donation Session</h6>
-        <p class="mb-2">Patient: <strong>{{ $activeSession->patient->user->name }}</strong> &middot; expires {{ $activeSession->expires_at->diffForHumans() }}</p>
-        <a href="{{ route('chat.show', $activeSession) }}" class="btn btn-primary btn-sm">Open Chat</a>
+    <div class="card border-0 shadow-sm mb-4 border-danger">
+        <div class="card-body">
+            <h6 class="mb-2"><i class="bi bi-chat-dots"></i> Active Donation Session</h6>
+            <p class="mb-2">Patient: <strong>{{ $activeSession->patient->user->name }}</strong> &middot; expires {{ $activeSession->expires_at->diffForHumans() }}</p>
+            <a href="{{ route('chat.show', $activeSession) }}" class="btn btn-primary btn-sm">Open Chat</a>
+        </div>
     </div>
 @endif
 

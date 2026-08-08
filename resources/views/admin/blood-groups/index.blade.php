@@ -44,7 +44,9 @@
     <div class="col-md-2"><button class="btn btn-outline-primary w-100">Filter</button></div>
 </form>
 
-<div class="card p-3">
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+    <div class="table-responsive">
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>
@@ -113,6 +115,8 @@
             @endforelse
         </tbody>
     </table>
+    </div>
+    </div>
 </div>
 
 <div class="mt-3">{{ $bloodGroups->links() }}</div>

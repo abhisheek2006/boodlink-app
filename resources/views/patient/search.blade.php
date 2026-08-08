@@ -27,7 +27,7 @@
 <div class="row g-3">
     @forelse ($donors as $donor)
         <div class="col-md-4">
-            <div class="card p-3 h-100">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="d-flex align-items-center gap-3 mb-2">
                     <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center" style="width:56px;height:56px;">
                         <i class="bi bi-person-fill fs-4 text-secondary"></i>

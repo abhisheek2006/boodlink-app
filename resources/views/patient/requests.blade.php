@@ -4,7 +4,7 @@
 @section('content')
 <h4 class="mb-4">My Blood Requests</h4>
 
-<div class="card p-3">
+<div class="card border-0 shadow-sm">
     <table class="table align-middle">
         <thead>
             <tr><th>Date</th><th>Donor</th><th>Blood Group</th><th>Status</th><th></th></tr>

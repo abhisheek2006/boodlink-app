@@ -109,6 +109,15 @@ class DonationService
 
             $this->notify($session->patient->user_id, 'Donation Completed', 'Your donation session has been completed. Thank you!');
             $this->notify($donor->user_id, 'Waiting Period Started', "Your cooldown has started. Next eligible: {$donor->next_eligible_date->toFormattedDateString()}.");
+
+            // Send a well-wishing "thank you for donating" email to the donor.
+            try {
+                $freshDonor = $donor->fresh();
+                \Mail::to($freshDonor->user->email)
+                    ->send(new \App\Mail\DonationThankYou($freshDonor->user->fresh(), $session));
+            } catch (\Throwable $e) {
+                // Email failures must never break the donation flow.
+            }
         });
     }
 

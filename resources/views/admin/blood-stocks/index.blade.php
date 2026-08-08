@@ -9,7 +9,9 @@
     </button>
 </div>
 
-<div class="card p-3">
+<div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+    <div class="table-responsive">
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr><th>Blood Group</th><th>Units Available</th><th>Status</th><th></th></tr>
@@ -41,6 +43,8 @@
             @endforelse
         </tbody>
     </table>
+    </div>
+    </div>
 </div>
 
 <div class="modal fade" id="addStockModal" tabindex="-1">

@@ -4,7 +4,7 @@
 @section('content')
 <h4 class="mb-4"><i class="bi bi-trophy text-warning"></i> Donor Leaderboard</h4>
 
-<div class="card p-3">
+<div class="card border-0 shadow-sm p-3">
     <table class="table table-hover align-middle mb-0">
         <thead>
             <tr>

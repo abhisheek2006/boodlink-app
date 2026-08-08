@@ -4,7 +4,7 @@
 @section('content')
 <h4 class="mb-4">Request Blood from {{ $donor->user->name }}</h4>
 
-<div class="card p-4" style="max-width:640px;">
+<div class="card border-0 shadow-sm" style="max-width:640px;">
     <form method="POST" action="{{ route('patient.requests.store', $donor) }}">
         @csrf
         <div class="mb-3">

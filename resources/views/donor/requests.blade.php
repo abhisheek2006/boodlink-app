@@ -7,7 +7,7 @@
 <div class="row g-3">
     @forelse ($requests as $request)
         <div class="col-md-6">
-            <div class="card p-3">
+            <div class="card border-0 shadow-sm h-100">
                 <div class="d-flex justify-content-between">
                     <div>
                         <div class="fw-semibold">{{ $request->patient->user->name }}</div>

@@ -4,7 +4,8 @@
 @section('content')
 <h4 class="mb-4">Donation History</h4>
 
-<div class="card p-3 mb-4">
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
     <div class="row text-center">
         <div class="col-md-3 col-6">
             <div class="text-muted small">Total Donations</div>
@@ -23,9 +24,10 @@
             <div class="fs-6 fw-bold">{{ $donor->availability }}</div>
         </div>
     </div>
+    </div>
 </div>
 
-<div class="card p-3">
+<div class="card border-0 shadow-sm">
     <table class="table table-hover align-middle mb-0" id="historyTable">
         <thead>
             <tr>

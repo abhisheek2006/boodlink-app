@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\BloodGroupController;
 use App\Http\Controllers\Admin\BloodStockController;
+use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AuthController;
@@ -97,6 +98,18 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::patch('/users/{user}/unban', [UserManagementController::class, 'unban'])->name('users.unban');
         Route::post('/users/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('users.reset-password');
         Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+
+        /*
+        | Mail Composer
+        |--------------------------------------------------------------------------
+        |  Save templates (GET index / POST store / POST send). Admin-only.
+        */
+        Route::get('/mail', [MailController::class, 'index'])->name('mail.index');
+        Route::get('/mail/create', [MailController::class, 'create'])->name('mail.create');
+        Route::post('/mail/templates', [MailController::class, 'storeTemplate'])->name('mail.templates.store');
+        Route::post('/mail/send', [MailController::class, 'send'])->name('mail.send');
+        Route::get('/mail/{template}', [MailController::class, 'show'])->name('mail.show');
+        Route::delete('/mail/{template}', [MailController::class, 'destroyTemplate'])->name('mail.templates.destroy');
 
         Route::get('/blood-groups', [BloodGroupController::class, 'index'])->name('blood-groups.index');
         Route::post('/blood-groups', [BloodGroupController::class, 'store'])->name('blood-groups.store');

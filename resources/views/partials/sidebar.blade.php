@@ -10,6 +10,7 @@
 
     @if ($user->isAdmin())
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}"><i class="bi bi-people"></i> User Management</a></li>
+        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.mail.*') ? 'active' : '' }}" href="{{ route('admin.mail.index') }}"><i class="bi bi-envelope-paper"></i> Mail Composer</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.blood-groups.*') ? 'active' : '' }}" href="{{ route('admin.blood-groups.index') }}"><i class="bi bi-droplet"></i> Blood Groups</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.blood-stocks.*') ? 'active' : '' }}" href="{{ route('admin.blood-stocks.index') }}"><i class="bi bi-boxes"></i> Blood Inventory</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.chats.*') ? 'active' : '' }}" href="{{ route('admin.chats.index') }}"><i class="bi bi-chat-dots"></i> Chat Monitoring</a></li>

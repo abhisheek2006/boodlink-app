@@ -18,19 +18,28 @@
 <div class="row g-3 mb-4">
     @foreach ($counts as $label => $value)
         <div class="col-md-3 col-6">
-            <div class="card p-3">
-                <div class="text-muted small">{{ $label }}</div>
-                <div class="fs-3 fw-bold">{{ $value }}</div>
+            <div class="stat-card h-100">
+                <div class="stat-value">{{ $value }}</div>
+                <div class="stat-label">{{ $label }}</div>
             </div>
         </div>
     @endforeach
 </div>
 
 @if ($activeSession)
-    <div class="card p-3 mb-4 border-danger">
-        <h6><i class="bi bi-chat-dots"></i> Active Chat</h6>
-        <p class="mb-2">Donor: <strong>{{ $activeSession->donor->user->name }}</strong></p>
-        <a href="{{ route('chat.show', $activeSession) }}" class="btn btn-primary btn-sm">Open Chat</a>
+    <div class="card border-0 shadow-sm mb-4 border-info">
+        <div class="card-body">
+            <h6 class="mb-2"><i class="bi bi-chat-dots"></i> Active Chat</h6>
+            <p class="mb-2">Donor: <strong>{{ $activeSession->donor->user->name }}</strong></p>
+            <a href="{{ route('chat.show', $activeSession) }}" class="btn btn-primary btn-sm">Open Chat</a>
+        </div>
+    </div>
+@endif
+
+@if ($activeSession)
+@else
+    <div class="alert alert-info border-0 mb-4">
+        <i class="bi bi-info-circle me-2"></i> No active donation session. Search for donors to get started.
     </div>
 @endif
 
