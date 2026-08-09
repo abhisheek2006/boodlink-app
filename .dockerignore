@@ -1,0 +1,39 @@
+# Build / runtime noise (handled inside the image stages)
+.git
+.gitattributes
+.gitignore
+.gitkeep
+.gitmodules
+
+# Local dev & environment
+Dockerfile
+.dockerignore
+docker-entrypoint.sh
+render.yaml
+docker-compose.yml
+docker-compose.*.yml
+.env
+.env.bak
+.env.example
+.env.testing
+.env.dusk.local
+.npmrc
+.vscode
+.idea
+
+# Dependencies that are rebuilt inside the image
+node_modules
+vendor
+boodlink-app
+nul
+
+# Local tooling / docs
+tests
+phpunit.xml
+*.md
+docs
+
+# Misc
+*.log
+*.sqlite
+*.sqlite-journal

@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: bloodlink-web
+    runtime: docker
+    plan: free
+    region: omaha
+    build:
+      dockerfilePath: ./Dockerfile
+      # Render runs `docker build` using the Dockerfile; the container's
+      # ENTRYPOINT (docker-entrypoint.sh) takes care of port binding,
+      # migrations and cache warming.
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      # Provide sensible defaults; override the real values in the Render
+      # dashboard (or via a PostgreSQL/MySQL add-on).
+      - key: APP_NAME
+        value: Blood Link
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        value: https://bloodlink-web.onrender.com
+      - key: APP_FALLBACK_LOCALE
+        value: en
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
+      - key: DB_CONNECTION
+        value: mysql
+      - key: SESSION_DRIVER
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: MAIL_MAILER
+        value: log
