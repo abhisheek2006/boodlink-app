@@ -206,7 +206,6 @@ template instead:
 
 | Role  | Email                   | Password |
 |-------|--------------------------|----------|
-| Admin | admin@bloodbank.com      | password |
 | Donor | donor1@example.com … donor50@example.com | password |
 | Patient | patient1@example.com … patient50@example.com | password |
 
