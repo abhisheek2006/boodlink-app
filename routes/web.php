@@ -31,6 +31,8 @@ Route::view('/', 'home')->name('home');
 */
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::get('/register/donor', [AuthController::class, 'showDonorRegister'])->name('register.donor');
+    Route::get('/register/patient', [AuthController::class, 'showPatientRegister'])->name('register.patient');
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

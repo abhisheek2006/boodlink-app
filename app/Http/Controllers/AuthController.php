@@ -27,6 +27,22 @@ class AuthController extends Controller
         ]);
     }
 
+    public function showDonorRegister(): View
+    {
+        return view('auth.register', [
+            'bloodGroups' => BloodGroup::where('status', 'Active')->orderBy('name')->get(),
+            'role' => 'Donor',
+        ]);
+    }
+
+    public function showPatientRegister(): View
+    {
+        return view('auth.register', [
+            'bloodGroups' => BloodGroup::where('status', 'Active')->orderBy('name')->get(),
+            'role' => 'Patient',
+        ]);
+    }
+
     public function register(RegisterRequest $request): RedirectResponse
     {
         $data = $request->validated();
