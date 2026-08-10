@@ -11,45 +11,20 @@
                         <i class="bi bi-heart-pulse-fill text-danger fs-2"></i>
                     </div>
                     <h4 class="mb-1">Create your Blood Link account</h4>
-                    <p class="text-muted small mb-0">
-                        @if (($role ?? null) === 'Patient')
-                            Register to start searching for matching blood donors
-                        @else
-                            Join a community that saves lives with every donation
-                        @endif
-                    </p>
+                    <p class="text-muted small mb-0">Join a community that saves lives with every donation</p>
                 </div>
 
                 <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                     @csrf
 
-                    @php
-                        $fixedRole = $role ?? null;
-                    @endphp
+                    <label class="form-label fw-semibold mb-1">I want to register as</label>
+                    <div class="btn-group w-100 mb-4" role="group">
+                        <input type="radio" class="btn-check" name="role" id="roleDonor" value="Donor" autocomplete="off" {{ old('role', 'Donor') == 'Donor' ? 'checked' : '' }}>
+                        <label class="btn btn-outline-danger" for="roleDonor"><i class="bi bi-heart-pulse"></i> Donor</label>
 
-                    @if ($fixedRole)
-                        <input type="hidden" name="role" value="{{ $fixedRole }}">
-                        <div class="d-flex align-items-center justify-content-center mb-4">
-                            <i class="bi {{ $fixedRole === 'Donor' ? 'bi-heart-pulse' : 'bi-person-heart' }} fs-4 me-2" style="color: var(--bl-secondary);"></i>
-                            <span class="small text-muted mb-0">
-                                Registering as a <span class="fw-semibold text-danger">{{ $fixedRole }}</span>
-                                @if ($fixedRole === 'Donor')
-                                    — <a href="{{ route('register.patient') }}" class="text-decoration-underline">register as a Patient instead</a>
-                                @else
-                                    — <a href="{{ route('register.donor') }}" class="text-decoration-underline">register as a Donor instead</a>
-                                @endif
-                            </span>
-                        </div>
-                    @else
-                        <label class="form-label fw-semibold mb-1">I want to register as</label>
-                        <div class="btn-group w-100 mb-4" role="group">
-                            <input type="radio" class="btn-check" name="role" id="roleDonor" value="Donor" autocomplete="off" {{ old('role', 'Donor') == 'Donor' ? 'checked' : '' }}>
-                            <label class="btn btn-outline-danger" for="roleDonor"><i class="bi bi-heart-pulse"></i> Donor</label>
-
-                            <input type="radio" class="btn-check" name="role" id="rolePatient" value="Patient" autocomplete="off" {{ old('role') == 'Patient' ? 'checked' : '' }}>
-                            <label class="btn btn-outline-danger" for="rolePatient"><i class="bi bi-person-heart"></i> Patient</label>
-                        </div>
-                    @endif
+                        <input type="radio" class="btn-check" name="role" id="rolePatient" value="Patient" autocomplete="off" {{ old('role') == 'Patient' ? 'checked' : '' }}>
+                        <label class="btn btn-outline-danger" for="rolePatient"><i class="bi bi-person-heart"></i> Patient</label>
+                    </div>
 
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -120,19 +95,19 @@
                         </div>
                     </div>
 
-                    <div id="donorFields" class="row g-3 mt-1 @if ($fixedRole === 'Patient') d-none @endif">
+                    <div id="donorFields" class="row g-3 mt-1">
                         <hr class="my-3">
                         <div class="col-md-6">
                             <label class="form-label">Blood Group</label>
-                            <select name="blood_group_id" class="form-select" @if (!$fixedRole || $fixedRole === 'Donor') required @endif>
+                            <select name="blood_group_id" class="form-select" required>
                                 @foreach ($bloodGroups as $bg)
-                                    <option value="{{ $bg->id }}" @selected(old('blood_group_id') == $bg->id)>{{ $bg->name }}</option>
+                                    <option value="{{ $bg->id }}">{{ $bg->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Weight (kg, min 45)</label>
-                            <input type="number" step="0.1" name="weight" value="{{ old('weight') }}" class="form-control" min="45" @if (!$fixedRole || $fixedRole === 'Donor') required @endif>
+                            <input type="number" step="0.1" name="weight" value="{{ old('weight') }}" class="form-control" min="45" required>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Medical History (optional)</label>
@@ -144,11 +119,11 @@
                         </div>
                     </div>
 
-                    <div id="patientFields" class="row g-3 mt-1 @if ($fixedRole === 'Donor') d-none @endif">
+                    <div id="patientFields" class="row g-3 mt-1 d-none">
                         <hr class="my-3">
                         <div class="col-md-6">
                             <label class="form-label">Emergency Contact</label>
-                            <input name="emergency_contact" value="{{ old('emergency_contact') }}" class="form-control" placeholder="Name & phone" @if (!$fixedRole || $fixedRole === 'Patient') required @endif>
+                            <input name="emergency_contact" value="{{ old('emergency_contact') }}" class="form-control" placeholder="Name & phone">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Required Blood Group (optional)</label>
@@ -175,22 +150,14 @@
     const patientRadio = document.getElementById('rolePatient');
     const donorFields  = document.getElementById('donorFields');
     const patientFields = document.getElementById('patientFields');
-    const fixedRole = @json($fixedRole ?? null);
 
     function toggleFields() {
-        if (fixedRole) {
-            donorFields.classList.toggle('d-none', fixedRole !== 'Donor');
-            patientFields.classList.toggle('d-none', fixedRole !== 'Patient');
-            return;
-        }
         const isDonor = donorRadio.checked;
         donorFields.classList.toggle('d-none', !isDonor);
         patientFields.classList.toggle('d-none', isDonor);
     }
-    if (donorRadio) {
-        donorRadio.addEventListener('change', toggleFields);
-        patientRadio.addEventListener('change', toggleFields);
-    }
+    donorRadio.addEventListener('change', toggleFields);
+    patientRadio.addEventListener('change', toggleFields);
     toggleFields();
 </script>
 @endpush

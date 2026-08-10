@@ -46,8 +46,8 @@
                 privately, quickly, and without a single detail shared until the donor chooses.
             </p>
             <div class="d-flex flex-wrap gap-2">
-                <a href="{{ route('register.donor') }}" class="btn btn-primary btn-lg px-4">Become a Donor</a>
-                <a href="{{ auth()->check() ? route('patient.search') : route('register.patient') }}" class="btn btn-outline-secondary btn-lg px-4">Find a Donor</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-lg px-4">Become a Donor</a>
+                <a href="{{ auth()->check() ? route('patient.search') : route('register') }}" class="btn btn-outline-secondary btn-lg px-4">Find a Donor</a>
             </div>
         </div>
         <div class="col-lg-5 d-none d-lg-block text-end">

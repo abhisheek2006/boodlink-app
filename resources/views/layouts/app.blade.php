@@ -370,7 +370,7 @@
                 </div>
             @else
                 <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
-                <a href="{{ route('register.donor') }}" class="btn btn-primary btn-sm">Become a Donor</a>
+                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Become a Donor</a>
             @endauth
         </div>
     </div>
