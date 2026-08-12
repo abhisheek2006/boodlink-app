@@ -4,21 +4,37 @@ namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class AdminNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(
-        public string $mailSubject,
-        public string $body,
-    ) {}
+    public string $subject;
+    public string $body;
 
-    public function build()
+    public function __construct(string $subject, string $body)
     {
-        return $this
-            ->subject($this->mailSubject)
-            ->with(['subject' => $this->mailSubject, 'body' => $this->body]);
+        $this->subject = $subject;
+        $this->body = $body;
+    }
+
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: $this->subject,
+            with: [
+                'body' => $this->body,
+            ],
+        );
+    }
+
+    public function content(): Content
+    {
+        return new Content(
+            view: 'mail.admin-notification',
+        );
     }
 }

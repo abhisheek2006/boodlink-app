@@ -13,7 +13,6 @@ use Illuminate\View\View;
 
 class MailController extends Controller
 {
-    /** List saved templates. */
     public function index(Request $request): View
     {
         $templates = MailTemplate::latest()->with('creator')->paginate(15)->withQueryString();
@@ -21,7 +20,6 @@ class MailController extends Controller
         return view('admin.mail.index', compact('templates'));
     }
 
-    /** Show the compose form (optionally pre-fill from a template). */
     public function create(Request $request): View
     {
         $template = $request->query('template')
@@ -38,7 +36,6 @@ class MailController extends Controller
         return view('admin.mail.compose', compact('template', 'scopeCounts'));
     }
 
-    /** Save a reusable template. */
     public function storeTemplate(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -55,13 +52,11 @@ class MailController extends Controller
         return redirect()->route('admin.mail.index')->with('success', 'Template saved.');
     }
 
-    /** Show a saved template (read-only). */
     public function show(MailTemplate $template): View
     {
         return view('admin.mail.show', compact('template'));
     }
 
-    /** Delete a saved template. */
     public function destroyTemplate(MailTemplate $template): RedirectResponse
     {
         $template->delete();
@@ -69,7 +64,6 @@ class MailController extends Controller
         return back()->with('success', 'Template deleted.');
     }
 
-    /** Send the composed email to the chosen recipient scope. */
     public function send(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -105,7 +99,6 @@ class MailController extends Controller
                 );
                 $sent++;
             } catch (\Throwable $e) {
-                // Swallow individual failures so the batch continues.
             }
         }
 
@@ -113,9 +106,6 @@ class MailController extends Controller
             ->with('success', "Email sent to {$sent} recipient(s).");
     }
 
-    /**
-     * Resolve the recipient query by scope.
-     */
     protected function resolveRecipients(string $scope)
     {
         return match ($scope) {

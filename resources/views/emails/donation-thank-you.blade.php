@@ -50,7 +50,7 @@
             </p>
 
             <div class="stats-box">
-                <div class="stat-value">{{ $user->donor->total_donations }}</div>
+                <div class="stat-value">{{ $user->donor->total_donations + 1 }}</div>
                 <div class="stat-label">Total Donations</div>
             </div>
 

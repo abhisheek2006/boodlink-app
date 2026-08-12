@@ -13,7 +13,11 @@
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.mail.*') ? 'active' : '' }}" href="{{ route('admin.mail.index') }}"><i class="bi bi-envelope-paper"></i> Mail Composer</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.blood-groups.*') ? 'active' : '' }}" href="{{ route('admin.blood-groups.index') }}"><i class="bi bi-droplet"></i> Blood Groups</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.blood-stocks.*') ? 'active' : '' }}" href="{{ route('admin.blood-stocks.index') }}"><i class="bi bi-boxes"></i> Blood Inventory</a></li>
+        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.blood-requests.*') ? 'active' : '' }}" href="{{ route('admin.blood-requests.index') }}"><i class="bi bi-card-list"></i> Blood Requests</a></li>
+        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.donations.*') ? 'active' : '' }}" href="{{ route('admin.donations.index') }}"><i class="bi bi-heart-pulse"></i> Donations</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.chats.*') ? 'active' : '' }}" href="{{ route('admin.chats.index') }}"><i class="bi bi-chat-dots"></i> Chat Monitoring</a></li>
+        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.audit-logs.*') ? 'active' : '' }}" href="{{ route('admin.audit-logs.index') }}"><i class="bi bi-shield-check"></i> Audit Log</a></li>
+        <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}" href="{{ route('admin.settings.index') }}"><i class="bi bi-gear"></i> System Settings</a></li>
         <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}" href="{{ route('admin.reports.index') }}"><i class="bi bi-file-earmark-bar-graph"></i> Reports</a></li>
     @endif
 

@@ -74,6 +74,27 @@ class User extends Authenticatable
         return $this->hasMany(UserModerationLog::class, 'admin_id');
     }
 
+    /** Audit log entries where this user was the admin actor. */
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class, 'admin_id');
+    }
+
+    /** Donor detail share records involving this user. */
+    public function donorDetailShares(): HasMany
+    {
+        if ($this->isDonor() && $this->donor) {
+            return $this->hasMany(DonorDetailShare::class, 'donor_id');
+        }
+
+        if ($this->isPatient() && $this->patient) {
+            return $this->hasMany(DonorDetailShare::class, 'patient_id');
+        }
+
+        return $this->hasMany(DonorDetailShare::class, 'donor_id')
+            ->where('donor_id', 0);
+    }
+
     public function bannedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class, 'banned_by');

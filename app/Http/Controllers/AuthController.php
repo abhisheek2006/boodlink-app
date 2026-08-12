@@ -20,11 +20,14 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    protected function bloodGroups(): \Illuminate\Database\Eloquent\Collection
+    {
+        return BloodGroup::where('status', 'Active')->orderBy('name')->get();
+    }
+
     public function showRegister(): View
     {
-        return view('auth.register', [
-            'bloodGroups' => BloodGroup::where('status', 'Active')->orderBy('name')->get(),
-        ]);
+        return view('auth.register', ['bloodGroups' => $this->bloodGroups()]);
     }
 
     public function register(RegisterRequest $request): RedirectResponse
@@ -81,6 +84,30 @@ class AuthController extends Controller
 
         return redirect()->route($user->dashboardRoute())
             ->with('success', 'Welcome to Blood Link! Your account has been created.');
+    }
+
+    public function showDonorRegister(): View
+    {
+        return view('auth.register-donor', ['bloodGroups' => $this->bloodGroups()]);
+    }
+
+    public function showPatientRegister(): View
+    {
+        return view('auth.register-patient', ['bloodGroups' => $this->bloodGroups()]);
+    }
+
+    public function registerDonor(RegisterRequest $request): RedirectResponse
+    {
+        $request->merge(['role' => 'Donor']);
+
+        return $this->register($request);
+    }
+
+    public function registerPatient(RegisterRequest $request): RedirectResponse
+    {
+        $request->merge(['role' => 'Patient']);
+
+        return $this->register($request);
     }
 
     public function showLogin(): View

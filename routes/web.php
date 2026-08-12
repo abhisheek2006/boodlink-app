@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\Admin\AnalyticsController;
+use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\BloodGroupController;
 use App\Http\Controllers\Admin\BloodStockController;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BloodRequestController;
@@ -32,6 +34,11 @@ Route::view('/', 'home')->name('home');
 Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
+
+    Route::get('/register/donor', [AuthController::class, 'showDonorRegister'])->name('register.donor');
+    Route::post('/register/donor', [AuthController::class, 'registerDonor'])->name('register.donor.post');
+    Route::get('/register/patient', [AuthController::class, 'showPatientRegister'])->name('register.patient');
+    Route::post('/register/patient', [AuthController::class, 'registerPatient'])->name('register.patient.post');
 
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -125,6 +132,18 @@ Route::middleware(['auth', 'active'])->group(function () {
 
         Route::get('/chats', [ChatController::class, 'adminIndex'])->name('chats.index');
         Route::get('/chats/{session}', [ChatController::class, 'adminShow'])->name('chats.show');
+
+        Route::get('/blood-requests', [BloodRequestController::class, 'adminIndex'])->name('blood-requests.index');
+        Route::get('/blood-requests/{bloodRequest}', [BloodRequestController::class, 'adminShow'])->name('blood-requests.show');
+
+        Route::get('/donations', [DonationSessionController::class, 'adminIndex'])->name('donations.index');
+        Route::get('/donations/{session}', [DonationSessionController::class, 'adminShow'])->name('donations.show');
+
+        Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+
+        Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+        Route::post('/settings/clear-cache', [SettingsController::class, 'clearCache'])->name('settings.clear-cache');
 
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/reports/{report}', [ReportController::class, 'preview'])->name('reports.preview');

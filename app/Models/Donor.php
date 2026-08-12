@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\DonorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Donor extends Model
 {
-    /** @use HasFactory<\Database\Factories\DonorFactory> */
+    /** @use HasFactory<DonorFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -28,6 +29,8 @@ class Donor extends Model
         'current_rank',
         'last_donation_date',
         'next_eligible_date',
+        'eligible_again_at',
+        'medical_review_required',
         'donation_status',
     ];
 
@@ -38,6 +41,8 @@ class Donor extends Model
             'total_donations' => 'integer',
             'last_donation_date' => 'date',
             'next_eligible_date' => 'date',
+            'eligible_again_at' => 'datetime',
+            'medical_review_required' => 'boolean',
         ];
     }
 

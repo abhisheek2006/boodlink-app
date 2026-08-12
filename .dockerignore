@@ -8,6 +8,7 @@
 # Local dev & environment
 Dockerfile
 .dockerignore
+docker-entrypoint.sh
 render.yaml
 docker-compose.yml
 docker-compose.*.yml

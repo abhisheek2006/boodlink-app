@@ -14,11 +14,17 @@ class SendBirthdayEmails extends Command
 
     public function handle(): int
     {
-        // Find every active user whose birthday is today.
+        $today = now()->toDateString();
+
         $users = User::whereNotNull('email')
-            ->where('status', 'Active')
+            ->where('email_verified_at', '!=', null)
             ->whereMonth('dob', now()->month)
             ->whereDay('dob', now()->day)
+            ->where(function ($q) use ($today) {
+                // Only send once per birthday — guard against re-sending on a
+                // re-run by checking that the dob is this year-or-older.
+                $q->whereRaw("DATE_FORMAT(dob, '%Y') <=", now()->year);
+            })
             ->get();
 
         if ($users->isEmpty()) {

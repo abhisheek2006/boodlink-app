@@ -7,8 +7,7 @@ FROM composer:2 AS composer
 WORKDIR /app
 COPY composer.json composer.lock ./
 RUN --mount=type=cache,target=/root/.composer/cache \
-    composer install --no-interaction --no-progress --prefer-dist --no-scripts \
-    && composer dump-autoload --no-interaction --classmap-authoritative --optimize
+    composer install --no-interaction --no-progress --prefer-dist --no-scripts
 
 # ──────────────────────────────────────────────────────────────
 # Stage 2 — Frontend assets (Vite + Tailwind)
@@ -57,9 +56,10 @@ COPY --from=node /app/public/build/ ./public/build/
 # Application source (excludes vendor/node_modules via .dockerignore)
 COPY . .
 
-# Discover packages, link storage, fix permissions
+# Discover packages, link storage, fix permissions (app code now present)
 RUN php artisan package:discover --ansi \
     && php artisan storage:link --force \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
 COPY docker-entrypoint.sh /usr/local/bin/
