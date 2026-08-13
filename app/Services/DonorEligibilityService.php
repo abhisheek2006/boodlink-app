@@ -108,6 +108,19 @@ class DonorEligibilityService
     }
 
     /**
+     * Boolean convenience used by the donor search filter / request routing.
+     *
+     * A donor "can receive a blood request" exactly when they pass the full
+     * eligibility check above: not in an active session, post-donation
+     * cooldown elapsed, availability is Available/Idle, no medical-review
+     * flag and minimum weight is met.
+     */
+    public function canReceiveBloodRequest(Donor $donor): bool
+    {
+        return $this->checkEligibility($donor)['eligible'];
+    }
+
+    /**
      * Re-evaluate a donor that is in "Waiting" / "Deferred" state and flip
      * them back to "Available" once the cooldown ends.
      *

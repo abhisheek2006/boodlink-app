@@ -27,7 +27,7 @@ class DonorDetailSharingService
             );
         }
 
-        return DonorDetailShare::updateOrCreate(
+        $share = DonorDetailShare::updateOrCreate(
             ['donation_session_id' => $session->id],
             [
                 'donor_id' => $donor->id,
@@ -36,6 +36,12 @@ class DonorDetailSharingService
                 'revoked_at' => null,
             ],
         );
+
+        // Keep the session's quick-check flag in sync so the UI (and the
+        // admin/patient views) know the contact has actually been shared.
+        $session->forceFill(['contact_shared' => true])->save();
+
+        return $share;
     }
 
     public function getShareForSession(DonationSession $session): ?DonorDetailShare
@@ -54,6 +60,12 @@ class DonorDetailSharingService
         }
 
         $share->forceFill(['revoked_at' => Carbon::now()])->save();
+
+        // Mirror the revocation on the session so the UI stops showing the
+        // shared contact immediately.
+        if ($share->donationSession) {
+            $share->donationSession->forceFill(['contact_shared' => false])->save();
+        }
 
         return $share;
     }

@@ -1,514 +1,1526 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Blood Link') - Smart Blood Bank</title>
 
     @auth
-        <meta name="reverb-key" content="{{ config('broadcasting.connections.reverb.key') }}">
-        <meta name="reverb-host" content="{{ config('broadcasting.connections.reverb.options.host') }}">
-        <meta name="reverb-port" content="{{ config('broadcasting.connections.reverb.options.port') }}">
-        <meta name="reverb-scheme" content="{{ config('broadcasting.connections.reverb.options.scheme') }}">
-        <meta name="current-user-id" content="{{ auth()->id() }}">
+        <meta name="reverb-key"
+            content="{{ config('broadcasting.connections.reverb.key') }}">
+
+        <meta name="reverb-host"
+            content="{{ config('broadcasting.connections.reverb.options.host') }}">
+
+        <meta name="reverb-port"
+            content="{{ config('broadcasting.connections.reverb.options.port') }}">
+
+        <meta name="reverb-scheme"
+            content="{{ config('broadcasting.connections.reverb.options.scheme') }}">
+
+        <meta name="current-user-id"
+            content="{{ auth()->id() }}">
     @endauth
 
-    <!-- ── Bootstrap 5 + Icons ── -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- ── Fonts ── -->
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144;500;9..144;600;9..144;700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
 
     <style>
-        /* ═══════════════════════════════════════════════════════════
-           Blood Link · Modern Medical Design System
-           Clean, trustworthy, and life-affirming.
-           ═══════════════════════════════════════════════════════════ */
 
-         :root {
-             /* Core palette — medical red, trust blue, healing teal */
-             --bl-primary:    #DC2626;          /* Medical Red — actions, accents */
-             --bl-primary-rgb: 220, 38, 38;
-             --bl-secondary:  #2563EB;          /* Trust Blue — nav, charts */
-             --bl-secondary-rgb: 37, 99, 235;
+        /* =========================================================
+           BLOOD LINK DESIGN SYSTEM
+        ========================================================= */
 
-             --bl-success:    #10B981;          /* Healing teal */
-             --bl-success-rgb: 16, 185, 129;
-             --bl-info:       #3B82F6;
-             --bl-info-rgb:   59, 130, 246;
-             --bl-warning:    #F59E0B;
-             --bl-warning-rgb: 245, 158, 11;
-             --bl-danger:     #EA580C;          /* Coral-red for danger */
+        :root {
 
-             /* Neutrals */
-             --bl-ink:        #1E293B;          /* primary text */
-             --bl-ink-rgb:    30, 41, 59;
-             --bl-paper:      #F0F4F8;          /* page background */
-             --bl-surface:    #FFFFFF;          /* card / page surface */
-             --bl-elev:       #FFFFFF;          /* elevated surface (cards) */
-             --bl-slate:      #64748B;          /* secondary text, borders */
-             --bl-slate-rgb:  100, 116, 140;
-             --bl-line:       #E2E8F0;
+            --bl-primary: #DC2626;
+            --bl-primary-dark: #B91C1C;
+            --bl-primary-light: #FEF2F2;
 
-             /* Gradients */
-             --bl-hero-gradient: 135deg, #DC2626 0%, #EA580C 55%, #F59E0B 100%;
+            --bl-blue: #2563EB;
+            --bl-blue-light: #EFF6FF;
 
-             /* Re-point Bootstrap */
-             --bs-primary:        var(--bl-primary);
-             --bs-primary-rgb:    var(--bl-primary-rgb);
-             --bs-secondary:      var(--bl-secondary);
-             --bs-secondary-rgb:  var(--bl-secondary-rgb);
-             --bs-success:        var(--bl-success);
-             --bs-success-rgb:    var(--bl-success-rgb);
-             --bs-info:           var(--bl-info);
-             --bs-info-rgb:       var(--bl-info-rgb);
-             --bs-warning:        var(--bl-warning);
-             --bs-warning-rgb:    var(--bl-warning-rgb);
-             --bs-danger:         var(--bl-danger);
-             --bs-danger-rgb:     234, 88, 12;
-             --bs-body-bg:        var(--bl-paper);
-             --bs-body-color:     var(--bl-ink);
-             --bs-border-radius:    .65rem;
-             --bs-border-radius-lg: .9rem;
-             --bs-border-radius-sm: .4rem;
-             --bs-font-sans-serif:  'Inter', system-ui, -apple-system, sans-serif;
-             --bs-link-color:       var(--bl-primary);
-             --bs-link-hover-color: var(--bl-danger);
-             --bs-border-color:     var(--bl-line);
-         }
+            --bl-success: #16A34A;
+            --bl-warning: #F59E0B;
+            --bl-danger: #DC2626;
 
-         /* ── Base / background ── */
-         body {
-             background: var(--bl-paper);
-             color: var(--bl-ink);
-             font-weight: 400;
-         }
-         h1, h2, h3, h4, h5, h6, .display-headline {
-             font-family: 'Fraunces', Georgia, serif;
-             font-weight: 600;
-             letter-spacing: -0.008em;
-         }
-         .font-mono { font-family: 'IBM Plex Mono', monospace; }
-         a { color: var(--bl-primary); }
-         a:hover { color: var(--bl-danger); }
+            --bl-dark: #172033;
+            --bl-text: #334155;
+            --bl-muted: #64748B;
 
-         /* ── Main content area ── */
-         .page-wrapper { min-height: calc(100vh - 57px); }
+            --bl-bg: #F6F8FB;
+            --bl-white: #FFFFFF;
 
-         /* ── Navbar ── */
-         .navbar {
-             background: var(--bl-surface) !important;
-             border-bottom: 1px solid var(--bl-line);
-             box-shadow: 0 1px 3px rgba(30,41,59,.05);
-         }
-         .navbar-brand {
-             font-family: 'Fraunces', Georgia, serif;
-             font-weight: 600; font-size: 1.25rem; color: var(--bl-ink) !important;
-         }
-         .navbar-brand .pulse-mark { color: var(--bl-primary); display: inline-flex; }
-         .navbar-brand .pulse-mark svg { width: 28px; height: 20px; }
-         .navbar-brand .pulse-mark path {
-             stroke-dasharray: 60; stroke-dashoffset: 60;
-             animation: draw-pulse 2.4s ease-in-out infinite;
-         }
-         @keyframes draw-pulse {
-             0% { stroke-dashoffset: 60; }
-             35% { stroke-dashoffset: 0; }
-             100% { stroke-dashoffset: 0; }
-         }
-         @media (prefers-reduced-motion: reduce) {
-             .navbar-brand .pulse-mark path { animation: none; stroke-dashoffset: 0; }
-         }
+            --bl-border: #E5E7EB;
 
-         /* ── Sidebar / Nav ── */
-         .sidebar {
-             min-height: calc(100vh - 57px);
-             background: var(--bl-surface);
-             border-right: 1px solid var(--bl-line);
-         }
-         .sidebar .nav-link {
-             color: var(--bl-ink);
-             border-radius: .55rem;
-             font-size: .9rem;
-             font-weight: 500;
-             padding: .6rem 1rem;
-             margin-bottom: .2rem;
-             transition: all .16s ease;
-         }
-         .sidebar .nav-link i { width: 1.25rem; color: var(--bl-slate); margin-right: .5rem; }
-         .sidebar .nav-link.active {
-             color: var(--bl-primary);
-             background: rgba(var(--bl-primary-rgb), .08);
-         }
-         .sidebar .nav-link.active i { color: var(--bl-primary); }
-         .sidebar .nav-link:hover:not(.active) {
-             background: rgba(var(--bl-ink-rgb), .04);
-             color: var(--bl-secondary);
-         }
+            --bl-radius: 14px;
 
-         /* ── Cards ── modern, floating */
-         .card {
-             border: 1px solid var(--bl-line);
-             border-radius: var(--bs-border-radius-lg);
-             box-shadow: 0 1px 3px rgba(30,41,59,.05);
-             background: var(--bl-surface);
-         }
-         .card-header {
-             background: rgba(248,250,252,.8);
-             border-bottom: 1px solid var(--bl-line);
-             font-family: 'Fraunces', Georgia, serif;
-             font-weight: 600;
-         }
-         .card-body { padding: 1.5rem; }
+            --bs-primary: var(--bl-primary);
+            --bs-primary-rgb: 220, 38, 38;
 
-         /* ── Stats cards (home/dashboard) ── */
-         .stat-card {
-             border: 1px solid var(--bl-line);
-             border-radius: var(--bs-border-radius-lg);
-             padding: 1.25rem 1rem;
-             text-align: center;
-             background: var(--bl-surface);
-             box-shadow: 0 1px 3px rgba(30,41,59,.05);
-             transition: transform .16s ease, box-shadow .16s ease;
-         }
-         .stat-card:hover {
-             transform: translateY(-2px);
-             box-shadow: 0 6px 14px rgba(30,41,59,.08);
-         }
-         .stat-card .stat-value {
-             font-size: 1.9rem;
-             font-weight: 700;
-             font-family: 'IBM Plex Mono', monospace;
-         }
-         .stat-card .stat-label {
-             font-size: .8rem;
-             text-transform: uppercase;
-             letter-spacing: .04em;
-             color: var(--bl-slate);
-         }
+            --bs-body-bg: var(--bl-bg);
+            --bs-body-color: var(--bl-text);
 
-         /* ── Buttons ── */
-         .btn {
-             font-weight: 500;
-             border-radius: var(--bs-border-radius);
-             transition: transform .08s ease, box-shadow .16s ease;
-         }
-         .btn-sm { font-size: .85rem; }
-         .btn-primary {
-             background: var(--bl-primary);
-             border-color: var(--bl-primary);
-             box-shadow: 0 2px 6px rgba(var(--bl-primary-rgb), .22);
-         }
-         .btn-primary:hover, .btn-primary:focus {
-             background: var(--bl-danger);
-             border-color: var(--bl-danger);
-             box-shadow: 0 4px 12px rgba(var(--bl-primary-rgb), .30);
-             transform: translateY(-1px);
-         }
-         .btn-outline-primary {
-             color: var(--bl-primary);
-             border-color: var(--bl-primary);
-         }
-         .btn-outline-primary:hover {
-             background: var(--bl-primary);
-             color: #fff;
-         }
-         .btn-secondary, .btn-outline-secondary {
-             background: var(--bl-surface);
-             border-color: var(--bl-line);
-             color: var(--bl-ink);
-         }
-         .btn-secondary:hover, .btn-outline-secondary:hover {
-             background: var(--bl-paper);
-             border-color: var(--bl-slate);
-         }
-         .btn-success { background: var(--bl-success); border-color: var(--bl-success); }
-         .btn-warning { color: #fff; }
+            --bs-border-color: var(--bl-border);
 
-         /* ── Forms ── */
-         .form-control, .form-select {
-             border-radius: var(--bs-border-radius);
-             border: 1.5px solid var(--bl-line);
-             padding-left: .85rem;
-             transition: border-color .16s ease, box-shadow .16s ease;
-         }
-         .form-control:focus, .form-select:focus {
-             border-color: var(--bl-secondary);
-             box-shadow: 0 0 0 3px rgba(var(--bl-secondary-rgb), .16);
-         }
-         .form-label {
-             font-weight: 500;
-             color: var(--bl-ink);
-             margin-bottom: .25rem;
-         }
+            --bs-font-sans-serif:
+                'Inter',
+                system-ui,
+                -apple-system,
+                sans-serif;
+        }
 
-         /* ── Password field with eye toggle ── */
-         .password-field { position: relative; }
-         .password-field .form-control { padding-right: 2.75rem; }
-         .password-toggle {
-             position: absolute;
-             right: .6rem;
-             top: 50%;
-             transform: translateY(-50%);
-             border: none;
-             background: transparent;
-             color: var(--bl-slate);
-             cursor: pointer;
-             padding: .3rem;
-             line-height: 1;
-             transition: color .16s ease;
-         }
-         .password-toggle:hover { color: var(--bl-primary); }
-         .password-toggle:focus { outline: 2px solid var(--bl-secondary); outline-offset: 1px; border-radius: 4px; }
 
-         /* ── Hero section ── */
-         .hero-section {
-             background: var(--bl-surface);
-             border: 1px solid var(--bl-line);
-             border-radius: var(--bs-border-radius-lg);
-             padding: 2.5rem 2rem;
-             box-shadow: 0 4px 20px rgba(30,41,59,.06);
-         }
-         .hero-badge {
-             display: inline-block;
-             padding: .3rem .8rem;
-             border-radius: 999px;
-             background: rgba(var(--bl-primary-rgb), .08);
-             color: var(--bl-primary);
-             font-size: .78rem;
-             font-weight: 600;
-             letter-spacing: .05em;
-             text-transform: uppercase;
-         }
+        /* =========================================================
+           GLOBAL
+        ========================================================= */
 
-         /* ── Pulse divider (signature motif) ── */
-         .pulse-divider { width: 100%; height: 32px; opacity: .85; }
-         .pulse-divider path { stroke: var(--bl-primary); }
+        * {
+            box-sizing: border-box;
+        }
 
-         /* ── Notification bell ── */
-         #notifBell { position: relative; }
-         #notifBadge {
-             position: absolute; top: -6px; right: -8px;
-             background: var(--bl-primary); color: #fff; border-radius: 999px;
-             font-size: .65rem; padding: 1px 5px; font-family: 'IBM Plex Mono', monospace;
-             display: none;
-         }
-         #notifBell.has-unread #notifBadge { display: inline-block; }
-         @keyframes bell-ring {
-             0%, 100% { transform: rotate(0); }
-             15% { transform: rotate(14deg); }
-             30% { transform: rotate(-12deg); }
-             45% { transform: rotate(8deg); }
-             60% { transform: rotate(-6deg); }
-             75% { transform: rotate(2deg); }
-         }
-         #notifBell.ringing i { animation: bell-ring .6s ease-in-out; display: inline-block; transform-origin: top center; }
+        body {
+            margin: 0;
+            background: var(--bl-bg);
+            color: var(--bl-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
 
-         /* ── Badges ── */
-         .badge-bronze { background: #9C6B3E; color: #fff; }
-         .badge-silver { background: #8A8F98; color: #fff; }
-         .badge-gold   { background: var(--bl-gold); color: #fff; }
-         .badge-platinum { background: var(--bl-ink); color: #fff; }
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Fraunces', Georgia, serif;
+            color: var(--bl-dark);
+            font-weight: 600;
+        }
 
-         /* ── Tables ── */
-         .table-hover tbody tr:hover { background: rgba(var(--bl-secondary-rgb), .04); }
-         .table thead th {
-             border: none;
-             font-weight: 600;
-             color: var(--bl-slate);
-             font-size: .8rem;
-             text-transform: uppercase;
-             letter-spacing: .03em;
-         }
-         .table td, .table th { vertical-align: middle; }
+        a {
+            color: var(--bl-primary);
+            text-decoration: none;
+        }
 
-         @stack('styles')
+        a:hover {
+            color: var(--bl-primary-dark);
+        }
+
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
+
+        .navbar {
+            height: 64px;
+            background: rgba(255, 255, 255, .96) !important;
+            border-bottom: 1px solid var(--bl-border);
+            box-shadow: 0 2px 10px rgba(15, 23, 42, .04);
+            z-index: 1030;
+        }
+
+        .navbar-brand {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--bl-dark) !important;
+            letter-spacing: -.02em;
+        }
+
+        .navbar-brand:hover {
+            color: var(--bl-dark) !important;
+        }
+
+
+        /* Heart / pulse logo */
+
+        .pulse-mark {
+            width: 32px;
+            height: 32px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: var(--bl-primary-light);
+            color: var(--bl-primary);
+        }
+
+        .pulse-mark svg {
+            width: 25px;
+            height: 20px;
+        }
+
+        .pulse-mark path {
+            stroke-dasharray: 60;
+            stroke-dashoffset: 60;
+
+            animation:
+                draw-pulse 2.4s ease-in-out infinite;
+        }
+
+        @keyframes draw-pulse {
+
+            0% {
+                stroke-dashoffset: 60;
+            }
+
+            35% {
+                stroke-dashoffset: 0;
+            }
+
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .pulse-mark path {
+                animation: none;
+                stroke-dashoffset: 0;
+            }
+        }
+
+
+        /* =========================================================
+           NAVBAR USER AREA
+        ========================================================= */
+
+        .navbar .dropdown-toggle {
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-weight: 500;
+        }
+
+        .navbar .dropdown-toggle::after {
+            margin-left: 8px;
+        }
+
+        .navbar .dropdown-menu {
+            margin-top: 10px;
+            border: 1px solid var(--bl-border);
+            border-radius: 12px;
+            padding: 7px;
+            box-shadow:
+                0 10px 30px rgba(15, 23, 42, .10);
+        }
+
+        .navbar .dropdown-item {
+            border-radius: 8px;
+            padding: 9px 12px;
+            font-size: 13px;
+        }
+
+        .navbar .dropdown-item:hover {
+            background: var(--bl-primary-light);
+            color: var(--bl-primary);
+        }
+
+
+        /* =========================================================
+           NOTIFICATION BELL
+        ========================================================= */
+
+        #notifBell {
+            position: relative;
+
+            width: 38px;
+            height: 38px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            color: var(--bl-dark) !important;
+
+            transition: .2s ease;
+        }
+
+        #notifBell:hover {
+            background: var(--bl-primary-light);
+            color: var(--bl-primary) !important;
+        }
+
+        #notifBadge {
+            position: absolute;
+
+            top: -2px;
+            right: -2px;
+
+            min-width: 17px;
+            height: 17px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0 4px;
+
+            border-radius: 50px;
+
+            background: var(--bl-primary);
+            color: white;
+
+            font-size: 9px;
+            font-weight: 700;
+
+            border: 2px solid white;
+
+            display: none;
+        }
+
+        #notifBell.has-unread #notifBadge {
+            display: flex;
+        }
+
+
+        @keyframes bell-ring {
+
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+
+            15% {
+                transform: rotate(14deg);
+            }
+
+            30% {
+                transform: rotate(-12deg);
+            }
+
+            45% {
+                transform: rotate(8deg);
+            }
+
+            60% {
+                transform: rotate(-6deg);
+            }
+
+            75% {
+                transform: rotate(2deg);
+            }
+        }
+
+        #notifBell.ringing i {
+            animation: bell-ring .6s ease-in-out;
+            transform-origin: top center;
+        }
+
+
+        /* =========================================================
+           MAIN LAYOUT
+        ========================================================= */
+
+        .page-wrapper {
+            min-height: calc(100vh - 64px);
+        }
+
+        .sidebar {
+            min-height: calc(100vh - 64px);
+
+            background: var(--bl-white);
+
+            border-right: 1px solid var(--bl-border);
+
+            padding: 18px 14px !important;
+        }
+
+
+        /* =========================================================
+           SIDEBAR NAVIGATION
+        ========================================================= */
+
+        .sidebar .nav {
+            gap: 3px !important;
+        }
+
+        .sidebar .nav-link {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 10px 12px;
+
+            border-radius: 10px;
+
+            color: #475569;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            transition:
+                background .18s ease,
+                color .18s ease,
+                transform .18s ease;
+        }
+
+        .sidebar .nav-link i {
+            width: 20px;
+
+            color: #94A3B8;
+
+            font-size: 16px;
+
+            text-align: center;
+
+            transition: color .18s ease;
+        }
+
+        .sidebar .nav-link:hover {
+            background: #F8FAFC;
+
+            color: var(--bl-primary);
+
+            transform: translateX(2px);
+        }
+
+        .sidebar .nav-link:hover i {
+            color: var(--bl-primary);
+        }
+
+        .sidebar .nav-link.active {
+            background: var(--bl-primary-light);
+
+            color: var(--bl-primary);
+
+            font-weight: 600;
+        }
+
+        .sidebar .nav-link.active i {
+            color: var(--bl-primary);
+        }
+
+
+        /* =========================================================
+           MOBILE SIDEBAR
+        ========================================================= */
+
+        .offcanvas {
+            width: 280px !important;
+
+            border: 0;
+
+            box-shadow:
+                10px 0 35px rgba(15, 23, 42, .12);
+        }
+
+        .offcanvas-header {
+            border-bottom: 1px solid var(--bl-border);
+        }
+
+        .offcanvas-title {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
+
+        main > .row > .col-lg-10 {
+            padding-left: 28px !important;
+            padding-right: 28px !important;
+        }
+
+
+        /* =========================================================
+           CARDS
+        ========================================================= */
+
+        .card {
+            border: 1px solid var(--bl-border);
+
+            border-radius: var(--bl-radius);
+
+            background: var(--bl-white);
+
+            box-shadow:
+                0 2px 8px rgba(15, 23, 42, .035);
+
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #FAFBFC;
+
+            border-bottom: 1px solid var(--bl-border);
+
+            padding: 15px 18px;
+
+            color: var(--bl-dark);
+
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .btn {
+            border-radius: 9px;
+
+            font-weight: 500;
+
+            transition:
+                transform .15s ease,
+                box-shadow .15s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: var(--bl-primary);
+            border-color: var(--bl-primary);
+
+            box-shadow:
+                0 3px 8px rgba(220, 38, 38, .20);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background: var(--bl-primary-dark);
+            border-color: var(--bl-primary-dark);
+
+            box-shadow:
+                0 5px 14px rgba(220, 38, 38, .25);
+        }
+
+        .btn-outline-primary {
+            color: var(--bl-primary);
+            border-color: var(--bl-primary);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--bl-primary);
+            border-color: var(--bl-primary);
+            color: white;
+        }
+
+        .btn-outline-secondary {
+            color: #475569;
+            border-color: var(--bl-border);
+            background: white;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+            color: var(--bl-dark);
+        }
+
+        .btn-success {
+            background: var(--bl-success);
+            border-color: var(--bl-success);
+        }
+
+
+        /* =========================================================
+           FORMS
+        ========================================================= */
+
+        .form-label {
+            color: var(--bl-dark);
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 6px;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 40px;
+
+            border: 1px solid var(--bl-border);
+
+            border-radius: 9px;
+
+            color: var(--bl-dark);
+
+            background: white;
+
+            transition:
+                border-color .15s ease,
+                box-shadow .15s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--bl-primary);
+
+            box-shadow:
+                0 0 0 3px rgba(220, 38, 38, .10);
+        }
+
+        .form-control::placeholder {
+            color: #94A3B8;
+        }
+
+
+        /* =========================================================
+           PASSWORD FIELD
+        ========================================================= */
+
+        .password-field {
+            position: relative;
+        }
+
+        .password-field .form-control {
+            padding-right: 45px;
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 10px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: 0;
+
+            background: transparent;
+
+            color: #94A3B8;
+
+            cursor: pointer;
+
+            padding: 5px;
+
+            line-height: 1;
+        }
+
+        .password-toggle:hover {
+            color: var(--bl-primary);
+        }
+
+
+        /* =========================================================
+           TABLES
+        ========================================================= */
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: #F8FAFC;
+
+            border-bottom: 1px solid var(--bl-border);
+
+            color: #64748B;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: .04em;
+
+            text-transform: uppercase;
+
+            padding: 13px 15px;
+        }
+
+        .table tbody td {
+            padding: 14px 15px;
+
+            border-color: #F1F5F9;
+
+            color: #334155;
+        }
+
+        .table-hover tbody tr:hover {
+            background: #FAFBFC;
+        }
+
+
+        /* =========================================================
+           BADGES
+        ========================================================= */
+
+        .badge {
+            border-radius: 6px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            padding: 5px 8px;
+        }
+
+        .badge-bronze {
+            background: #9C6B3E;
+            color: white;
+        }
+
+        .badge-silver {
+            background: #8A8F98;
+            color: white;
+        }
+
+        .badge-gold {
+            background: #D4A017;
+            color: white;
+        }
+
+        .badge-platinum {
+            background: #172033;
+            color: white;
+        }
+
+
+        /* =========================================================
+           ALERTS
+        ========================================================= */
+
+        .alert {
+            border-radius: 10px;
+            border: 0;
+        }
+
+
+        /* =========================================================
+           PAGINATION
+        ========================================================= */
+
+        .pagination {
+            gap: 5px;
+        }
+
+        .pagination .page-link {
+            border: 1px solid var(--bl-border);
+
+            border-radius: 8px !important;
+
+            color: #475569;
+
+            background: white;
+
+            min-width: 36px;
+            height: 36px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 13px;
+
+            box-shadow: none;
+        }
+
+        .pagination .page-link:hover {
+            background: var(--bl-primary-light);
+
+            color: var(--bl-primary);
+
+            border-color: #FECACA;
+        }
+
+        .pagination .active .page-link {
+            background: var(--bl-primary);
+
+            border-color: var(--bl-primary);
+
+            color: white;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 991.98px) {
+
+            main > .row > .col-lg-10 {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+        }
+
+
+        @media (max-width: 575.98px) {
+
+            .navbar {
+                height: 58px;
+            }
+
+            .navbar-brand {
+                font-size: 1.15rem;
+            }
+
+            .pulse-mark {
+                width: 29px;
+                height: 29px;
+            }
+
+            main > .row > .col-lg-10,
+            main > .row > .col-12 {
+                padding: 16px !important;
+            }
+
+            .card-body {
+                padding: 16px;
+            }
+
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+
+        }
+
+
+        @stack('styles')
+
     </style>
+
 </head>
+
+
 <body>
 
+
+<!-- =========================================================
+     NAVBAR
+========================================================= -->
+
 <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container-fluid">
+
+    <div class="container-fluid px-3 px-lg-4">
+
         @auth
-            <button class="btn btn-sm btn-outline-secondary d-lg-none me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
-                <i class="bi bi-list"></i>
+
+            <button
+                class="btn btn-sm btn-outline-secondary d-lg-none me-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mobileSidebar">
+
+                <i class="bi bi-list fs-5"></i>
+
             </button>
+
         @endauth
-        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('home') }}">
+
+
+        <!-- Brand -->
+
+        <a
+            class="navbar-brand d-flex align-items-center gap-2"
+            href="{{ route('home') }}">
+
             <span class="pulse-mark">
-                <svg viewBox="0 0 60 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 12 H16 L21 3 L28 21 L33 12 H60" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+
+                <svg
+                    viewBox="0 0 60 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+
+                    <path
+                        d="M0 12 H16 L21 3 L28 21 L33 12 H60"
+                        stroke="currentColor"
+                        stroke-width="2.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
                 </svg>
+
             </span>
+
             Blood Link
+
         </a>
-        <div class="d-flex align-items-center ms-auto gap-3">
+
+
+        <!-- Right side -->
+
+        <div class="d-flex align-items-center ms-auto gap-2 gap-md-3">
+
             @auth
-                <a href="{{ route('notifications.index') }}" id="notifBell" class="text-dark fs-5 text-decoration-none">
+
+                <!-- Notification -->
+
+                <a
+                    href="{{ route('notifications.index') }}"
+                    id="notifBell"
+                    aria-label="Notifications">
+
                     <i class="bi bi-bell"></i>
+
                     <span id="notifBadge">0</span>
+
                 </a>
+
+
+                <!-- User -->
+
                 <div class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                        {{ auth()->user()->name }}
+
+                    <button
+                        class="btn btn-sm btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown">
+
+                        <i class="bi bi-person-circle me-1"></i>
+
+                        <span class="d-none d-sm-inline">
+                            {{ auth()->user()->name }}
+                        </span>
+
                     </button>
+
+
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Edit Profile</a></li>
-                        @if (auth()->user()->isAdmin())
-                            <li><a class="dropdown-item" href="{{ route('admin.mail.create') }}">Compose Mail</a></li>
-                        @endif
+
                         <li>
-                            <form action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <button class="dropdown-item">Logout</button>
-                            </form>
+                            <a
+                                class="dropdown-item"
+                                href="{{ route('profile.edit') }}">
+
+                                <i class="bi bi-person me-2"></i>
+                                Edit Profile
+
+                            </a>
                         </li>
+
+
+                        @if (auth()->user()->isAdmin())
+
+                            <li>
+
+                                <a
+                                    class="dropdown-item"
+                                    href="{{ route('admin.mail.create') }}">
+
+                                    <i class="bi bi-envelope me-2"></i>
+                                    Compose Mail
+
+                                </a>
+
+                            </li>
+
+                        @endif
+
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+
+                        <li>
+
+                            <form
+                                action="{{ route('logout') }}"
+                                method="POST">
+
+                                @csrf
+
+                                <button
+                                    type="submit"
+                                    class="dropdown-item">
+
+                                    <i class="bi bi-box-arrow-right me-2"></i>
+                                    Logout
+
+                                </button>
+
+                            </form>
+
+                        </li>
+
                     </ul>
+
                 </div>
+
+
             @else
-                <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Login</a>
-                <a href="{{ route('register') }}" class="btn btn-primary btn-sm">Become a Donor</a>
+
+
+                <a
+                    href="{{ route('login') }}"
+                    class="btn btn-outline-secondary btn-sm">
+
+                    Login
+
+                </a>
+
+
+                <a
+                    href="{{ route('register') }}"
+                    class="btn btn-primary btn-sm">
+
+                    <i class="bi bi-heart-pulse me-1"></i>
+
+                    <span class="d-none d-sm-inline">
+                        Become a Donor
+                    </span>
+
+                </a>
+
+
             @endauth
+
         </div>
+
     </div>
+
 </nav>
 
+
+
+<!-- =========================================================
+     MOBILE SIDEBAR
+========================================================= -->
+
 @auth
-<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileSidebar">
+
+<div
+    class="offcanvas offcanvas-start"
+    tabindex="-1"
+    id="mobileSidebar">
+
     <div class="offcanvas-header">
-        <h6 class="offcanvas-title">Menu</h6>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+
+        <div class="d-flex align-items-center gap-2">
+
+            <span class="pulse-mark">
+
+                <svg
+                    viewBox="0 0 60 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+
+                    <path
+                        d="M0 12 H16 L21 3 L28 21 L33 12 H60"
+                        stroke="currentColor"
+                        stroke-width="2.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"/>
+
+                </svg>
+
+            </span>
+
+            <h6 class="offcanvas-title mb-0">
+                Blood Link
+            </h6>
+
+        </div>
+
+
+        <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas">
+        </button>
+
     </div>
+
+
     <div class="offcanvas-body">
+
         @include('partials.sidebar')
+
     </div>
+
 </div>
+
 @endauth
+
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
 
 <main class="container-fluid page-wrapper">
+
     <div class="row">
+
         @auth
-            <div class="col-lg-2 sidebar py-3 d-none d-lg-block">
+
+            <!-- Desktop Sidebar -->
+
+            <div class="col-lg-2 sidebar d-none d-lg-block">
+
                 @include('partials.sidebar')
+
             </div>
+
+
+            <!-- Content -->
+
             <div class="col-lg-10 py-4">
+
                 @include('partials.alerts')
+
                 @yield('content')
+
             </div>
+
+
         @else
+
+
             <div class="col-12 py-4">
+
                 @include('partials.alerts')
+
                 @yield('content')
+
             </div>
+
+
         @endauth
+
     </div>
+
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+
+<!-- =========================================================
+     BOOTSTRAP
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<!-- =========================================================
+     SWEET ALERT
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+</script>
+
+
 
 @auth
-<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js"></script>
+
+<!-- =========================================================
+     REAL-TIME CHAT / NOTIFICATIONS
+========================================================= -->
+
+<script
+    src="https://js.pusher.com/8.4.0/pusher.min.js">
+</script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/laravel-echo@1.16.1/dist/echo.iife.js">
+</script>
+
+
 <script>
-    // ── Real-time transport (Laravel Reverb, Pusher protocol) ──────
-    window.csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-    const currentUserId = document.querySelector('meta[name="current-user-id"]')?.content;
-    const reverbMeta = (name) => document.querySelector(`meta[name="${name}"]`)?.content;
+
+    window.csrfToken =
+        document.querySelector(
+            'meta[name="csrf-token"]'
+        ).content;
+
+
+    const currentUserId =
+        document.querySelector(
+            'meta[name="current-user-id"]'
+        )?.content;
+
+
+    const reverbMeta = (name) => {
+
+        return document.querySelector(
+            `meta[name="${name}"]`
+        )?.content;
+
+    };
+
+
+    /* Echo */
 
     window.Echo = new Echo({
+
         broadcaster: 'reverb',
-        key: reverbMeta('reverb-key'),
-        wsHost: reverbMeta('reverb-host'),
-        wsPort: reverbMeta('reverb-port'),
-        wssPort: reverbMeta('reverb-port'),
-        forceTLS: reverbMeta('reverb-scheme') === 'https',
-        enabledTransports: ['ws', 'wss'],
-        auth: { headers: { 'X-CSRF-TOKEN': window.csrfToken } },
+
+        key:
+            reverbMeta('reverb-key'),
+
+        wsHost:
+            reverbMeta('reverb-host'),
+
+        wsPort:
+            reverbMeta('reverb-port'),
+
+        wssPort:
+            reverbMeta('reverb-port'),
+
+        forceTLS:
+            reverbMeta('reverb-scheme') === 'https',
+
+        enabledTransports:
+            ['ws', 'wss'],
+
+        auth: {
+
+            headers: {
+
+                'X-CSRF-TOKEN':
+                    window.csrfToken
+
+            }
+
+        }
+
     });
 
-    // ── Notification chime (from public/audio/) ──────────────────────
-    const NOTIF_SOUND = '/audio/mixkit-positive-notification-951.wav';
-    const notifAudio = new Audio(NOTIF_SOUND);
+
+    /* =====================================================
+       Notification Sound
+    ===================================================== */
+
+    const notifAudio =
+        new Audio(
+            '/audio/mixkit-positive-notification-951.wav'
+        );
+
+
     function playNotificationChime() {
+
         try {
+
             notifAudio.currentTime = 0;
-            notifAudio.play().catch(() => {}); /* autoplay may be blocked */
-        } catch (e) { /* fail silently */ }
+
+            notifAudio
+                .play()
+                .catch(() => {});
+
+        } catch (error) {
+
+            // Ignore audio errors
+
+        }
+
     }
 
-    // ── Live notification bell ───────────────────────────────────────
-    const notifBell = document.getElementById('notifBell');
-    const notifBadge = document.getElementById('notifBadge');
-    let unreadCount = parseInt(notifBadge?.textContent || '0', 10);
+
+    /* =====================================================
+       Notification Badge
+    ===================================================== */
+
+    const notifBell =
+        document.getElementById('notifBell');
+
+    const notifBadge =
+        document.getElementById('notifBadge');
+
+
+    let unreadCount =
+        parseInt(
+            notifBadge?.textContent || '0',
+            10
+        );
+
 
     function refreshBadge() {
-        if (!notifBadge) return;
-        notifBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-        notifBell.classList.toggle('has-unread', unreadCount > 0);
+
+        if (!notifBadge || !notifBell) {
+            return;
+        }
+
+
+        notifBadge.textContent =
+            unreadCount > 99
+                ? '99+'
+                : unreadCount;
+
+
+        notifBell.classList.toggle(
+            'has-unread',
+            unreadCount > 0
+        );
+
     }
+
+
+    /* =====================================================
+       Load unread notifications
+    ===================================================== */
 
     async function loadUnreadCount() {
+
         try {
-            const res = await fetch('/notifications/unread-count');
-            const data = await res.json();
-            unreadCount = data.count ?? 0;
+
+            const response =
+                await fetch(
+                    '/notifications/unread-count'
+                );
+
+
+            const data =
+                await response.json();
+
+
+            unreadCount =
+                data.count ?? 0;
+
+
             refreshBadge();
-        } catch (e) { /* ignore */ }
+
+        } catch (error) {
+
+            // Ignore notification request errors
+
+        }
+
     }
+
+
     loadUnreadCount();
 
-    if (currentUserId) {
-        Echo.private(`user.${currentUserId}`).listen('.notification.created', (payload) => {
-            unreadCount += 1;
-            refreshBadge();
-            playNotificationChime();
-            notifBell.classList.add('ringing');
-            setTimeout(() => notifBell.classList.remove('ringing'), 650);
 
-            Swal.fire({
-                toast: true, position: 'top-end', icon: 'info',
-                title: payload.title, text: payload.message,
-                timer: 4500, showConfirmButton: false,
-            });
-        });
+    /* =====================================================
+       Live notifications
+    ===================================================== */
+
+    if (currentUserId && notifBell) {
+
+        Echo
+            .private(`user.${currentUserId}`)
+            .listen(
+                '.notification.created',
+                function (payload) {
+
+                    unreadCount++;
+
+                    refreshBadge();
+
+                    playNotificationChime();
+
+
+                    notifBell.classList.add(
+                        'ringing'
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            notifBell.classList.remove(
+                                'ringing'
+                            );
+
+                        },
+                        650
+                    );
+
+
+                    Swal.fire({
+
+                        toast: true,
+
+                        position: 'top-end',
+
+                        icon: 'info',
+
+                        title:
+                            payload.title,
+
+                        text:
+                            payload.message,
+
+                        timer: 4500,
+
+                        showConfirmButton: false
+
+                    });
+
+                }
+            );
+
     }
+
 </script>
+
 @endauth
 
+
+
+<!-- =========================================================
+     PASSWORD TOGGLE + GLOBAL ALERTS
+========================================================= -->
+
 <script>
-    window.csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+
+        /* Password visibility */
+
+        document
+            .querySelectorAll('.password-field')
+            .forEach(function (field) {
+
+
+                const input =
+                    field.querySelector(
+                        'input[type="password"], input[type="text"]'
+                    );
+
+
+                const toggle =
+                    field.querySelector(
+                        '.password-toggle'
+                    );
+
+
+                const icon =
+                    toggle?.querySelector('i');
+
+
+                if (!input || !toggle || !icon) {
+                    return;
+                }
+
+
+                toggle.addEventListener(
+                    'click',
+                    function () {
+
+
+                        const isPassword =
+                            input.getAttribute(
+                                'type'
+                            ) === 'password';
+
+
+                        input.setAttribute(
+                            'type',
+                            isPassword
+                                ? 'text'
+                                : 'password'
+                        );
+
+
+                        icon.classList.toggle(
+                            'bi-eye-slash',
+                            !isPassword
+                        );
+
+
+                        icon.classList.toggle(
+                            'bi-eye',
+                            isPassword
+                        );
+
+                    }
+                );
+
+            });
+
+
+
+        /* Success message */
+
+        @if (session('success'))
+
+            Swal.fire({
+
+                icon: 'success',
+
+                title:
+                    @json(session('success')),
+
+                timer: 2500,
+
+                showConfirmButton: false
+
+            });
+
+        @endif
+
+
+
+        /* Validation error */
+
+        @if ($errors->any())
+
+            Swal.fire({
+
+                icon: 'error',
+
+                title:
+                    'Something needs your attention',
+
+                text:
+                    @json($errors->first())
+
+            });
+
+        @endif
+
+    }
+);
+
 </script>
 
-<!-- ── Password eye-toggle ── runs on every page ────────────────────── -->
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.password-field').forEach(function (field) {
-        const input  = field.querySelector('input[type="password"], input[type="text"]');
-        const toggle = field.querySelector('.password-toggle');
-        const icon   = toggle?.querySelector('i');
-        if (!input || !toggle || !icon) return;
-        toggle.addEventListener('click', function () {
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            icon.classList.toggle('bi-eye-slash');
-            icon.classList.toggle('bi-eye');
-        });
-    });
 
-    @if (session('success'))
-        Swal.fire({ icon: 'success', title: @json(session('success')), timer: 2500, showConfirmButton: false });
-    @endif
-    @if ($errors->any())
-        Swal.fire({ icon: 'error', title: 'Something needs your attention', text: @json($errors->first()) });
-    @endif
-});
-</script>
 
 @stack('scripts')
+
 </body>
 </html>

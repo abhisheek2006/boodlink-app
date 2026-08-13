@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BloodRequest;
+use App\Models\Donor;
+use App\Models\Patient;
 use App\Models\User;
 use App\Models\UserModerationLog;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +19,7 @@ class UserManagementController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = User::query()->with(['donor.bloodGroup', 'patient']);
+        $query = User::query()->with(['donor.bloodGroup', 'patient.requiredBloodGroup']);
 
         if ($role = $request->query('role')) {
             $query->where('role', $role);
@@ -44,7 +46,16 @@ class UserManagementController extends Controller
 
         $users = $query->latest()->paginate(20)->withQueryString();
 
-        return view('admin.users.index', compact('users'));
+        if ($request->ajax()) {
+            return view('admin.users._table', compact('users'));
+        }
+
+        $totalUsers    = User::count();
+        $activeDonors  = Donor::where('availability', 'Available')->count();
+        $totalPatients = Patient::count();
+        $totalLogins   = User::whereNotNull('last_login_at')->count();
+
+        return view('admin.users.index', compact('users', 'totalUsers', 'activeDonors', 'totalPatients', 'totalLogins'));
     }
 
     public function show(User $user): View

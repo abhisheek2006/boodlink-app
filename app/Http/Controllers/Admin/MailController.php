@@ -70,11 +70,12 @@ class MailController extends Controller
             'subject'        => ['required', 'string', 'max:255'],
             'body'           => ['required', 'string'],
             'recipient_type' => ['required', 'in:All,Donors,Patients,Admins'],
+            'template_name'  => ['nullable', 'string', 'max:100'],
         ]);
 
         if ($request->boolean('save_template')) {
             MailTemplate::create([
-                'name'           => $request->input('template_name', 'Untitled'),
+                'name'           => $request->input('template_name') ?: 'Untitled',
                 'subject'        => $data['subject'],
                 'body'           => $data['body'],
                 'recipient_type' => $data['recipient_type'],
