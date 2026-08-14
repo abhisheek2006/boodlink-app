@@ -47,7 +47,13 @@ class ChatController extends Controller
             'message_type' => $data['message_type'] ?? 'text',
         ]);
 
-        broadcast(new ChatMessageSent($message))->toOthers();
+        try {
+            broadcast(new ChatMessageSent($message))->toOthers();
+        } catch (\Throwable $e) {
+            // Broadcasting (Reverb/WebSocket) is best-effort.
+            // The message is already persisted; the recipient will see it
+            // on the next poll refresh.
+        }
 
         if ($request->wantsJson()) {
             return response()->json(['message' => $message]);

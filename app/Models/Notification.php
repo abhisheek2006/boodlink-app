@@ -38,7 +38,14 @@ class Notification extends Model
         });
 
         static::created(function (self $notification) {
-            broadcast(new NotificationCreated($notification));
+            try {
+                broadcast(new NotificationCreated($notification));
+            } catch (\Throwable $e) {
+                // Broadcasting (Reverb/WebSocket) is best-effort.
+                // If the WS server is not running the notification is still
+                // persisted to the database, so listeners will pick it up
+                // on the next page load / poll cycle.
+            }
         });
     }
 

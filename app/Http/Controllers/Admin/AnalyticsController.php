@@ -25,8 +25,9 @@ class AnalyticsController extends Controller
     public function monthlyDonations(): JsonResponse
     {
         $data = DonationSession::where('status', 'Completed')
+            ->whereNotNull('ended_at')
             ->selectRaw("DATE_FORMAT(ended_at, '%Y-%m') as label, COUNT(*) as value")
-            ->groupBy('label')
+            ->groupByRaw("DATE_FORMAT(ended_at, '%Y-%m')")
             ->orderBy('label')
             ->get();
 
@@ -56,7 +57,7 @@ class AnalyticsController extends Controller
     {
         $data = Donor::selectRaw('city as label, COUNT(*) as value')
             ->groupBy('city')
-            ->orderByDesc('value')
+            ->orderByRaw('COUNT(*) DESC')
             ->limit(10)
             ->get();
 

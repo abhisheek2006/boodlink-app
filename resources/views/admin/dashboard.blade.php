@@ -611,9 +611,9 @@
                     Blood Group Distribution
                 </div>
 
-                <button class="card-action">
+                <a href="{{ route('admin.reports.preview', 'blood-group-distribution') }}" class="card-action">
                     View Details
-                </button>
+                </a>
 
             </div>
 
@@ -970,8 +970,11 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.blood-groups')))
-        .then(response => response.json())
+    fetch(@json(route('admin.analytics.blood-groups')), { credentials: 'same-origin' })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to load blood group data');
+            return response.json();
+        })
         .then(rows => {
 
             new Chart(
@@ -981,10 +984,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     data: {
 
-                        labels: rows.map(row => row.label),
+                        labels: rows.length ? rows.map(row => row.label) : ['No data'],
 
                         datasets: [{
-                            data: rows.map(row => row.value),
+                            data: rows.length ? rows.map(row => row.value) : [0],
 
                             backgroundColor: [
                                 '#c92f3d',
@@ -1038,6 +1041,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             );
 
+        })
+        .catch(() => {
+            new Chart(
+                document.getElementById('bloodGroupChart'),
+                {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['No data'],
+                        datasets: [{
+                            data: [0],
+                            backgroundColor: ['#e2e8f0'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '62%',
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: { size: 11, weight: '600' }
+                                }
+                            }
+                        }
+                    }
+                }
+            );
         });
 
 
@@ -1047,8 +1079,11 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.monthly-donations')))
-        .then(response => response.json())
+    fetch(@json(route('admin.analytics.monthly-donations')), { credentials: 'same-origin' })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to load donation data');
+            return response.json();
+        })
         .then(rows => {
 
             new Chart(
@@ -1058,13 +1093,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     data: {
 
-                        labels: rows.map(row => row.label),
+                        labels: rows.length ? rows.map(row => row.label) : ['No data'],
 
                         datasets: [{
 
                             label: 'Donations',
 
-                            data: rows.map(row => row.value),
+                            data: rows.length ? rows.map(row => row.value) : [0],
 
                             borderColor: '#e11d48',
 
@@ -1148,6 +1183,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             );
 
+        })
+        .catch(() => {
+            new Chart(
+                document.getElementById('monthlyDonationsChart'),
+                {
+                    type: 'line',
+                    data: {
+                        labels: ['No data'],
+                        datasets: [{
+                            label: 'Donations',
+                            data: [0],
+                            borderColor: '#e11d48',
+                            backgroundColor: 'rgba(225,29,72,.10)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: .4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                }
+            );
         });
 
 
@@ -1157,8 +1217,11 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.availability')))
-        .then(response => response.json())
+    fetch(@json(route('admin.analytics.availability')), { credentials: 'same-origin' })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to load availability data');
+            return response.json();
+        })
         .then(rows => {
 
             new Chart(
@@ -1168,11 +1231,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     data: {
 
-                        labels: rows.map(row => row.label),
+                        labels: rows.length ? rows.map(row => row.label) : ['No data'],
 
                         datasets: [{
 
-                            data: rows.map(row => row.value),
+                            data: rows.length ? rows.map(row => row.value) : [0],
 
                             backgroundColor: [
                                 '#65b74b',
@@ -1215,6 +1278,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             );
 
+        })
+        .catch(() => {
+            new Chart(
+                document.getElementById('availabilityChart'),
+                {
+                    type: 'pie',
+                    data: {
+                        labels: ['No data'],
+                        datasets: [{
+                            data: [0],
+                            backgroundColor: ['#e2e8f0'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    font: { size: 11, weight: '600' }
+                                }
+                            }
+                        }
+                    }
+                }
+            );
         });
 
 
@@ -1224,8 +1315,11 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.top-cities')))
-        .then(response => response.json())
+    fetch(@json(route('admin.analytics.top-cities')), { credentials: 'same-origin' })
+        .then(response => {
+            if (!response.ok) throw new Error('Failed to load top cities data');
+            return response.json();
+        })
         .then(rows => {
 
             new Chart(
@@ -1235,13 +1329,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     data: {
 
-                        labels: rows.map(row => row.label),
+                        labels: rows.length ? rows.map(row => row.label) : ['No data'],
 
                         datasets: [{
 
                             label: 'Donors',
 
-                            data: rows.map(row => row.value),
+                            data: rows.length ? rows.map(row => row.value) : [0],
 
                             backgroundColor: '#e11d48',
 
@@ -1302,6 +1396,29 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             );
 
+        })
+        .catch(() => {
+            new Chart(
+                document.getElementById('topCitiesChart'),
+                {
+                    type: 'bar',
+                    data: {
+                        labels: ['No data'],
+                        datasets: [{
+                            label: 'Donors',
+                            data: [0],
+                            backgroundColor: '#e2e8f0',
+                            borderRadius: 7,
+                            borderSkipped: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                }
+            );
         });
 
 });

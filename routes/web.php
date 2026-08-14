@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 | Public routes
 |--------------------------------------------------------------------------
 */
-Route::view('/', 'home')->name('home');
+Route::get('/', fn () => view('home'))->middleware('guest')->name('home');
 
 /*
 |--------------------------------------------------------------------------
