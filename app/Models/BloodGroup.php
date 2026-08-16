@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\BloodGroupFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class BloodGroup extends Model
 {
-    /** @use HasFactory<\Database\Factories\BloodGroupFactory> */
+    /** @use HasFactory<BloodGroupFactory> */
     use HasFactory;
 
     protected $fillable = [

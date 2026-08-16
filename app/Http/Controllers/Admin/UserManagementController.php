@@ -50,10 +50,10 @@ class UserManagementController extends Controller
             return view('admin.users._table', compact('users'));
         }
 
-        $totalUsers    = User::count();
-        $activeDonors  = Donor::where('availability', 'Available')->count();
+        $totalUsers = User::count();
+        $activeDonors = Donor::where('availability', 'Available')->count();
         $totalPatients = Patient::count();
-        $totalLogins   = User::whereNotNull('last_login_at')->count();
+        $totalLogins = User::whereNotNull('last_login_at')->count();
 
         return view('admin.users.index', compact('users', 'totalUsers', 'activeDonors', 'totalPatients', 'totalLogins'));
     }

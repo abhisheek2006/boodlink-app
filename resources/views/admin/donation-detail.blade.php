@@ -42,7 +42,7 @@
     </div>
 </div>
 
-@if ($session->messages && $session->messages->isNotEmpty())
+@if ($session->chatMessages && $session->chatMessages->isNotEmpty())
     <div class="card border-0 shadow-sm mt-3">
         <div class="card-header">Chat Messages</div>
         <div class="card-body">
@@ -52,7 +52,7 @@
                         <tr><th>Time</th><th>Sender</th><th>Message</th></tr>
                     </thead>
                     <tbody>
-                        @foreach ($session->messages as $msg)
+                        @foreach ($session->chatMessages as $msg)
                             <tr>
                                 <td>{{ $msg->created_at->format('M d, H:i') }}</td>
                                 <td>{{ $msg->sender->name ?? '—' }}</td>

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Notifications\ResetPasswordNotification;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
@@ -95,7 +96,7 @@ class User extends Authenticatable
             ->where('donor_id', 0);
     }
 
-    public function bannedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function bannedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'banned_by');
     }

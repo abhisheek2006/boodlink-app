@@ -443,7 +443,7 @@
                                 name="phone"
                                 value="{{ old('phone') }}"
                                 class="register-input"
-                                placeholder="+1 555 0000"
+                                placeholder="+91 0000000000"
                                 required
                             >
 
@@ -493,12 +493,45 @@
                             <input
                                 type="date"
                                 name="dob"
+                                id="donor-dob"
                                 value="{{ old('dob') }}"
                                 class="register-input"
                                 required
                             >
 
                         </div>
+
+                    </div>
+
+
+                    {{-- Age --}}
+                    <div class="col-md-6">
+
+                        <label class="register-label">
+                            Age <span class="required-mark">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="bi bi-person-standing"></i>
+
+                            <input
+                                type="number"
+                                name="age"
+                                id="donor-age"
+                                value="{{ old('age', old('dob') ? \Carbon\Carbon::parse(old('dob'))->age : '') }}"
+                                class="register-input"
+                                placeholder="18 - 65 years"
+                                min="18"
+                                max="65"
+                                required
+                            >
+
+                        </div>
+
+                        <small class="text-muted">
+                            Donors must be between 18 and 65 years old.
+                        </small>
 
                     </div>
 
@@ -803,6 +836,41 @@
             });
 
         });
+
+
+        // ── Age / Date of Birth auto-sync ─────────────────────────
+        const dobInput = document.getElementById('donor-dob');
+        const ageInput = document.getElementById('donor-age');
+
+        function ageFromDob(value) {
+            if (!value) return '';
+            const dob = new Date(value);
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+            return age;
+        }
+
+        function dobFromAge(value) {
+            const age = parseInt(value, 10);
+            if (!age || age < 1) return '';
+            const d = new Date();
+            d.setFullYear(d.getFullYear() - age);
+            return d.toISOString().slice(0, 10);
+        }
+
+        if (dobInput && ageInput) {
+
+            dobInput.addEventListener('change', function () {
+                ageInput.value = ageFromDob(this.value);
+            });
+
+            ageInput.addEventListener('input', function () {
+                dobInput.value = dobFromAge(this.value);
+            });
+
+        }
 
     });
 </script>

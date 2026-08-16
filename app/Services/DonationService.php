@@ -109,11 +109,18 @@ class DonationService
      * Donor explicitly shares their contact details.
      *
      * Delegates to DonorDetailSharingService which records the share
-     * in donor_detail_shares for audit purposes.
+     * in donor_detail_shares for audit purposes, then notifies the
+     * requesting patient so they know the details are available.
      */
     public function shareContact(DonationSession $session, Donor $donor): void
     {
         app(DonorDetailSharingService::class)->share($session, $donor);
+
+        $this->notify(
+            $session->patient->user_id,
+            'Contact Details Shared',
+            "Donor {$donor->user->name} shared their contact details with you. Open the chat to view them."
+        );
     }
 
     /**
@@ -257,7 +264,7 @@ class DonationService
             $this->notify(
                 $session->donor->user_id,
                 'Session Timer Reminder',
-                'Your donation session has been active for ' . $this->sessionTimeoutMinutes() . ' minutes. Please complete or end it.'
+                'Your donation session has been active for '.$this->sessionTimeoutMinutes().' minutes. Please complete or end it.'
             );
         }
 

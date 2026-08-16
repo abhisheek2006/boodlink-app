@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\GenericCollectionExport;
 use App\Http\Controllers\Controller;
 use App\Models\BloodStock;
-use App\Models\Donor;
 use App\Models\DonationSession;
+use App\Models\Donor;
 use App\Models\Patient;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
@@ -55,13 +56,13 @@ class ReportController extends Controller
     {
         $rows = $this->dataFor($report);
 
-        return Excel::download(new \App\Exports\GenericCollectionExport($rows), "{$report}-report.xlsx");
+        return Excel::download(new GenericCollectionExport($rows), "{$report}-report.xlsx");
     }
 
-    private function dataFor(string $report): \Illuminate\Support\Collection
+    private function dataFor(string $report): Collection
     {
         return match ($report) {
-             'donors' => Donor::with(['user', 'bloodGroup'])->get()->map(fn ($d) => [
+            'donors' => Donor::with(['user', 'bloodGroup'])->get()->map(fn ($d) => [
                 'Name' => $d->user?->name ?? '—',
                 'Blood Group' => $d->bloodGroup?->name ?? '—',
                 'City' => $d->city ?? '—',

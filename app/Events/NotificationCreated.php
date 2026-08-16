@@ -16,14 +16,12 @@ class NotificationCreated implements ShouldBroadcastNow
 {
     use InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Notification $notification)
-    {
-    }
+    public function __construct(public Notification $notification) {}
 
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('user.' . $this->notification->user_id),
+            new PrivateChannel('user.'.$this->notification->user_id),
         ];
     }
 

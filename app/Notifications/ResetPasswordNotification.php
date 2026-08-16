@@ -7,9 +7,7 @@ use Illuminate\Notifications\Notification;
 
 class ResetPasswordNotification extends Notification
 {
-    public function __construct(public string $token)
-    {
-    }
+    public function __construct(public string $token) {}
 
     public function via(object $notifiable): array
     {
@@ -23,7 +21,7 @@ class ResetPasswordNotification extends Notification
             'email' => $notifiable->getEmailForPasswordReset(),
         ], false));
 
-        $expiryMinutes = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire', 60);
+        $expiryMinutes = config('auth.passwords.'.config('auth.defaults.passwords').'.expire', 60);
 
         return (new MailMessage)
             ->subject('Reset Your Blood Link Password')

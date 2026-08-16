@@ -143,7 +143,7 @@ class BloodRequestController extends Controller
             'donor.user',
             'bloodGroup',
             'donationSession',
-            'donationSession.messages',
+            'donationSession.chatMessages',
         ]);
 
         if ($user->isDonor()) {
@@ -243,7 +243,7 @@ class BloodRequestController extends Controller
             'patient.user',
             'donor.user',
             'bloodGroup',
-            'donationSession.messages',
+            'donationSession.chatMessages',
         ]);
 
         return view('admin.blood-request-detail', compact('bloodRequest'));

@@ -371,7 +371,7 @@
 
             Don't have an account?
 
-            <a href="{{ route('register') }}">
+            <a href="{{ route('register.donor') }}">
                 Create an account
             </a>
 

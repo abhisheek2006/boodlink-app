@@ -324,7 +324,11 @@
     <div class="donor-welcome">
         <h1>Welcome, {{ $donor->user->name }}</h1>
         <p>
-            Thank you for being a lifesaver! Your generosity can change lives.
+            Age: {{ $donor->age() ?? 'N/A' }} years
+            <span class="mx-2">•</span>
+            <span class="{{ $donor->isAgeEligible() ? 'text-success' : 'text-danger' }}">
+                {{ $donor->isAgeEligible() ? 'Age-eligible to donate (18-65)' : 'Not age-eligible to donate' }}
+            </span>
         </p>
     </div>
 

@@ -48,13 +48,13 @@ class DonationSessionController extends Controller
      * 2. The session is still active.
      * 3. Details haven't already been shared (and not revoked).
      */
-    public function shareContact(DonationSession $session, Request $request, DonorDetailSharingService $sharingService): RedirectResponse
+    public function shareContact(DonationSession $session, Request $request): RedirectResponse
     {
         $donor = $this->authorizeDonor($session, $request);
 
         abort_unless($session->status === 'Active', 422, 'This session is no longer active.');
 
-        $sharingService->share($session, $donor);
+        $this->donationService->shareContact($session, $donor);
 
         return back()->with('success', 'Contact details shared with the patient.');
     }
@@ -110,7 +110,7 @@ class DonationSessionController extends Controller
             'donor.user',
             'bloodRequest.patient.user',
             'bloodRequest.bloodGroup',
-            'messages.sender',
+            'chatMessages.sender',
         ]);
 
         return view('admin.donation-detail', compact('session'));

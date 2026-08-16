@@ -40,6 +40,14 @@ class UpdateProfileRequest extends FormRequest
                 'weight' => ['required', 'numeric', 'min:45'],
                 'medical_history' => ['nullable', 'string', 'max:2000'],
             ];
+
+            // Donors must stay within the legal donation age range (18-65).
+            $rules['dob'] = [
+                'required',
+                'date',
+                'before:-'.config('blood.minimum_age_donate', 18).' years',
+                'after:-'.config('blood.maximum_age_donate', 65).' years',
+            ];
         }
 
         if ($this->user()->isPatient()) {

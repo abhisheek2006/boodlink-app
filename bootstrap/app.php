@@ -6,7 +6,6 @@ use App\Http\Middleware\DonorMiddleware;
 use App\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\PatientMiddleware;
 use App\Http\Middleware\SessionActiveMiddleware;
-
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;

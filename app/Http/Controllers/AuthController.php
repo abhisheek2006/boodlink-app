@@ -8,26 +8,27 @@ use App\Models\BloodGroup;
 use App\Models\Donor;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    protected function bloodGroups(): \Illuminate\Database\Eloquent\Collection
+    protected function bloodGroups(): Collection
     {
         return BloodGroup::where('status', 'Active')->orderBy('name')->get();
     }
 
-    public function showRegister(): View
+    /** Generic register entry point → always routes to the donor form. */
+    public function showRegister(): RedirectResponse
     {
-        return view('auth.register', ['bloodGroups' => $this->bloodGroups()]);
+        return redirect()->route('register.donor');
     }
 
     public function register(RegisterRequest $request): RedirectResponse
@@ -134,7 +135,7 @@ class AuthController extends Controller
             Auth::logout();
 
             return back()->withErrors([
-                'email' => 'Your account has been banned. ' . ($user->ban_reason ?? ''),
+                'email' => 'Your account has been banned. '.($user->ban_reason ?? ''),
             ]);
         }
 
@@ -142,7 +143,7 @@ class AuthController extends Controller
             Auth::logout();
 
             return back()->withErrors([
-                'email' => 'Your account is suspended until ' . optional($user->suspended_until)->toFormattedDateString() . '.',
+                'email' => 'Your account is suspended until '.optional($user->suspended_until)->toFormattedDateString().'.',
             ]);
         }
 

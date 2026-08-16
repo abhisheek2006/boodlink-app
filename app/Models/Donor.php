@@ -75,10 +75,30 @@ class Donor extends Model
 
     // ── Eligibility helpers ──────────────────────────────────────
 
+    /** Donor's current age in years, or null when no DOB is on file. */
+    public function age(): ?int
+    {
+        return $this->user?->dob?->age;
+    }
+
+    /** Whether the donor is within the legal donation age range. */
+    public function isAgeEligible(): bool
+    {
+        $age = $this->age();
+
+        if ($age === null) {
+            return false;
+        }
+
+        return $age >= (int) config('blood.minimum_age_donate', 18)
+            && $age <= (int) config('blood.maximum_age_donate', 65);
+    }
+
     /** Fully eligible to appear in search / receive requests. */
     public function isSearchable(): bool
     {
-        return $this->availability === 'Available'
+        return $this->isAgeEligible()
+            && $this->availability === 'Available'
             && $this->user->isActiveAccount()
             && ! $this->activeSession()->exists()
             && ($this->next_eligible_date === null || $this->next_eligible_date->isPast());

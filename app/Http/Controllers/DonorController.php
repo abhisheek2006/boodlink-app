@@ -39,6 +39,9 @@ class DonorController extends Controller
         $query = Donor::query()
             ->with(['user', 'bloodGroup'])
             ->whereHas('user', fn ($q) => $q->where('status', 'Active'))
+            ->whereHas('user', fn ($q) => $q->whereNotNull('dob')
+                ->whereDate('dob', '<=', now()->subYears($this->eligibilityService->minimumAge())->toDateString())
+                ->whereDate('dob', '>', now()->subYears($this->eligibilityService->maximumAge() + 1)->toDateString()))
             ->doesntHave('activeSession')
             ->where(function ($q) {
                 $q->whereNull('next_eligible_date')

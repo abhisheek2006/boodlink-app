@@ -302,7 +302,7 @@
                 </div>
 
                 <div class="donor-info">
-                    Blood donor · Compatible blood group
+                    Blood donor · {{ $donor->age() }} years old · Compatible blood group
                 </div>
             </div>
 

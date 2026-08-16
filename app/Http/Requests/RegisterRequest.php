@@ -42,6 +42,14 @@ class RegisterRequest extends FormRequest
                 'medical_history' => ['nullable', 'string', 'max:2000'],
                 'last_donation_date' => ['nullable', 'date', 'before_or_equal:today'],
             ];
+
+            // Donors must be within the legal donation age range (18-65).
+            $rules['dob'] = [
+                'required',
+                'date',
+                'before:-'.config('blood.minimum_age_donate', 18).' years',
+                'after:-'.config('blood.maximum_age_donate', 65).' years',
+            ];
         }
 
         if ($this->input('role') === 'Patient') {
@@ -60,7 +68,8 @@ class RegisterRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'dob.before' => 'You must be at least 18 years old to register.',
+            'dob.before' => 'You must be at least '.config('blood.minimum_age_donate', 18).' years old to register.',
+            'dob.after' => 'You must be under '.(config('blood.maximum_age_donate', 65) + 1).' years old to register as a donor.',
             'weight.min' => 'Donors must weigh at least 45 kg to be eligible.',
         ];
     }

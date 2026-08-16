@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\UserModerationLogFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserModerationLog extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserModerationLogFactory> */
+    /** @use HasFactory<UserModerationLogFactory> */
     use HasFactory;
 
     public $timestamps = false;

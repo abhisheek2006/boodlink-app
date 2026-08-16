@@ -12,7 +12,6 @@ class AdminNotificationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $subject;
     public string $body;
 
     public function __construct(string $subject, string $body)
@@ -25,9 +24,6 @@ class AdminNotificationMail extends Mailable
     {
         return new Envelope(
             subject: $this->subject,
-            with: [
-                'body' => $this->body,
-            ],
         );
     }
 
@@ -35,6 +31,9 @@ class AdminNotificationMail extends Mailable
     {
         return new Content(
             view: 'mail.admin-notification',
+            with: [
+                'body' => $this->body,
+            ],
         );
     }
 }

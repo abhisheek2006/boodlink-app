@@ -582,6 +582,13 @@
                         </div>
 
                         <div class="info-row">
+                            <i class="bi bi-calendar2-check-fill"></i>
+                            <span>
+                                {{ $donor->age() }} years old
+                            </span>
+                        </div>
+
+                        <div class="info-row">
                             <i class="bi bi-check-circle-fill"></i>
                             <span>
                                 Available donor

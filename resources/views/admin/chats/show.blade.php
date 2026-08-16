@@ -554,15 +554,24 @@
 </div>
 
 
+<div id="chatMeta"
+     class="d-none"
+     data-donor-user-id="{{ $session->donor->user_id }}"
+     data-donor-name="{{ $session->donor->user->name ?? '' }}"
+     data-patient-name="{{ $session->patient->user->name ?? '' }}">
+</div>
+
+
 @push('scripts')
 
 <script>
 
-    const donorUserId = {!! json_encode((int) $session->donor->user_id, JSON_THROW_ON_ERROR) !!};
-    const donorName = {!! json_encode($session->donor->user->name ?? null, JSON_THROW_ON_ERROR) !!};
-    const patientName = {!! json_encode($session->patient->user->name ?? null, JSON_THROW_ON_ERROR) !!};
+    const chatMeta = document.getElementById('chatMeta').dataset;
 
-    const adminChatBody = document.getElementById('adminChatBody');
+    const donorUserId = parseInt(chatMeta.donorUserId, 10);
+    const donorName = chatMeta.donorName;
+    const patientName = chatMeta.patientName;
+
     const adminChatBody =
         document.getElementById('adminChatBody');
 

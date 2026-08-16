@@ -9,11 +9,12 @@ use Carbon\Carbon;
  * Central decision engine for donor eligibility.
  *
  * A donor is eligible when ALL of the following are true:
- *   1. Not currently in an active donation session (Rules 1, 2).
- *   2. Post-donation cooldown has elapsed (Rule 3).
- *   3. Availability is "Available" or "Idle" (not Busy / Waiting).
- *   4. No medical-review flag (optional safety gate).
- *   5. Weight ≥ minimum threshold.
+ *   1. Age is within the allowed donation range (Rules 7: 18-65).
+ *   2. Not currently in an active donation session (Rules 1, 2).
+ *   3. Post-donation cooldown has elapsed (Rule 3).
+ *   4. Availability is "Available" or "Idle" (not Busy / Waiting).
+ *   5. No medical-review flag (optional safety gate).
+ *   6. Weight ≥ minimum threshold.
  */
 class DonorEligibilityService
 {
@@ -21,6 +22,18 @@ class DonorEligibilityService
     public function minimumWeight(): float
     {
         return (float) config('blood.minimum_weight', 50);
+    }
+
+    /** Minimum donor age (years). */
+    public function minimumAge(): int
+    {
+        return (int) config('blood.minimum_age_donate', 18);
+    }
+
+    /** Maximum donor age (years). */
+    public function maximumAge(): int
+    {
+        return (int) config('blood.maximum_age_donate', 65);
     }
 
     /** Deferral days for the donor's gender. */
@@ -55,7 +68,30 @@ class DonorEligibilityService
      */
     public function checkEligibility(Donor $donor): array
     {
-        // Rule 1: donor must not have an active (in-progress) session.
+        // Rule 1: age must be within the allowed donation range (18-65).
+        $age = $donor->age();
+        if ($age === null) {
+            return [
+                'eligible' => false,
+                'reason' => 'The donor has no date of birth on file and cannot be verified as eligible.',
+            ];
+        }
+
+        if ($age < $this->minimumAge()) {
+            return [
+                'eligible' => false,
+                'reason' => "The donor is too young to donate. Minimum age is {$this->minimumAge()} years.",
+            ];
+        }
+
+        if ($age > $this->maximumAge()) {
+            return [
+                'eligible' => false,
+                'reason' => "The donor is over the maximum donation age of {$this->maximumAge()} years.",
+            ];
+        }
+
+        // Rule 2: donor must not have an active (in-progress) session.
         if ($donor->activeSession()->exists()) {
             return [
                 'eligible' => false,
@@ -63,7 +99,7 @@ class DonorEligibilityService
             ];
         }
 
-        // Rule 2: must not be Busy / Waiting.
+        // Rule 3: must not be Busy / Waiting.
         if (! in_array($donor->availability, ['Available', 'Idle'], true)) {
             $reason = 'The donor is not currently available.';
 
@@ -75,7 +111,7 @@ class DonorEligibilityService
             return ['eligible' => false, 'reason' => $reason];
         }
 
-        // Rule 3: cooldown check via next_eligible_date.
+        // Rule 4: cooldown check via next_eligible_date.
         if ($donor->next_eligible_date && $donor->next_eligible_date->isFuture()) {
             return [
                 'eligible' => false,
@@ -83,7 +119,7 @@ class DonorEligibilityService
             ];
         }
 
-        // Rule 4: medical review flag.
+        // Rule 5: medical review flag.
         // The donors table migration does not include medical_review_required yet;
         // guard with a column_exists check for forward-compatibility.
         if (
@@ -111,9 +147,9 @@ class DonorEligibilityService
      * Boolean convenience used by the donor search filter / request routing.
      *
      * A donor "can receive a blood request" exactly when they pass the full
-     * eligibility check above: not in an active session, post-donation
-     * cooldown elapsed, availability is Available/Idle, no medical-review
-     * flag and minimum weight is met.
+     * eligibility check above: age within the allowed range, not in an active
+     * session, post-donation cooldown elapsed, availability is Available/Idle,
+     * no medical-review flag and minimum weight is met.
      */
     public function canReceiveBloodRequest(Donor $donor): bool
     {

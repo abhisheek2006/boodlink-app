@@ -12,9 +12,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
  */
 class GenericCollectionExport implements FromCollection, WithHeadings
 {
-    public function __construct(private Collection $rows)
-    {
-    }
+    public function __construct(private Collection $rows) {}
 
     public function collection(): Collection
     {

@@ -3,6 +3,37 @@
 
 @section('content')
 
+<style>
+    .emergency-icon,
+    .status-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .emergency-badge,
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .emergency-critical { background: #fff0f1; color: #ef2b2d; }
+    .emergency-high { background: #fff7e8; color: #f59e0b; }
+    .emergency-medium { background: #eef5ff; color: #2874e8; }
+    .emergency-low { background: #eafaf2; color: #10b981; }
+
+    .status-accepted { background: #eafaf2; color: #10b981; }
+    .status-pending { background: #fff7e8; color: #f59e0b; }
+    .status-completed { background: #eafaf2; color: #10b981; }
+    .status-rejected,
+    .status-cancelled { background: #fff0f1; color: #ef2b2d; }
+    .status-default { background: #f1f3f5; color: #64748b; }
+</style>
+
 {{-- Page Header --}}
 <div class="mb-4">
 
@@ -135,44 +166,19 @@
             <div class="col-md-3 col-6">
 
                 @php
-                    $emergencyStyle = match($request->emergency_level) {
-                        'Critical' => [
-                            'bg' => '#fff0f1',
-                            'color' => '#ef2b2d',
-                            'icon' => 'bi-exclamation-triangle-fill'
-                        ],
-                        'High' => [
-                            'bg' => '#fff7e8',
-                            'color' => '#f59e0b',
-                            'icon' => 'bi-exclamation-circle-fill'
-                        ],
-                        'Medium' => [
-                            'bg' => '#eef5ff',
-                            'color' => '#2874e8',
-                            'icon' => 'bi-info-circle-fill'
-                        ],
-                        default => [
-                            'bg' => '#f1f3f5',
-                            'color' => '#64748b',
-                            'icon' => 'bi-circle-fill'
-                        ],
+                    $emergencyClass = strtolower($request->emergency_level ?? 'Low');
+                    $emergencyIcon = match ($request->emergency_level) {
+                        'Critical' => 'bi-exclamation-triangle-fill',
+                        'High' => 'bi-exclamation-circle-fill',
+                        'Medium' => 'bi-info-circle-fill',
+                        default => 'bi-check-circle-fill',
                     };
                 @endphp
 
                 <div class="d-flex align-items-center gap-3">
 
-                    <div class="d-flex align-items-center justify-content-center"
-                         style="
-                            width: 52px;
-                            height: 52px;
-                            border-radius: 50%;
-                            background: {{ $emergencyStyle['bg'] }};
-                         ">
-                        <i class="bi {{ $emergencyStyle['icon'] }}"
-                           style="
-                                color: {{ $emergencyStyle['color'] }};
-                                font-size: 1.3rem;
-                           "></i>
+                    <div class="d-flex align-items-center justify-content-center emergency-icon emergency-{{ $emergencyClass }}">
+                        <i class="bi {{ $emergencyIcon }}"></i>
                     </div>
 
                     <div>
@@ -180,13 +186,7 @@
                             Emergency
                         </div>
 
-                        <span class="badge px-3 py-2"
-                              style="
-                                background: {{ $emergencyStyle['bg'] }};
-                                color: {{ $emergencyStyle['color'] }};
-                                border-radius: 8px;
-                                font-weight: 600;
-                              ">
+                        <span class="badge emergency-badge emergency-{{ $emergencyClass }}">
                             {{ $request->emergency_level }}
                         </span>
                     </div>
@@ -200,49 +200,21 @@
             <div class="col-md-3 col-6">
 
                 @php
-                    $statusStyle = match($request->status) {
-                        'Accepted' => [
-                            'bg' => '#eafaf2',
-                            'color' => '#10b981',
-                            'icon' => 'bi-check-circle-fill'
-                        ],
-                        'Pending' => [
-                            'bg' => '#fff7e8',
-                            'color' => '#f59e0b',
-                            'icon' => 'bi-clock-fill'
-                        ],
-                        'Completed' => [
-                            'bg' => '#eafaf2',
-                            'color' => '#10b981',
-                            'icon' => 'bi-check-circle-fill'
-                        ],
-                        'Rejected', 'Cancelled' => [
-                            'bg' => '#fff0f1',
-                            'color' => '#ef2b2d',
-                            'icon' => 'bi-x-circle-fill'
-                        ],
-                        default => [
-                            'bg' => '#f1f3f5',
-                            'color' => '#64748b',
-                            'icon' => 'bi-circle-fill'
-                        ],
+                    $statusClass = in_array($request->status, ['Rejected', 'Cancelled'], true)
+                        ? 'rejected'
+                        : strtolower($request->status ?? 'pending');
+                    $statusIcon = match ($request->status) {
+                        'Accepted', 'Completed' => 'bi-check-circle-fill',
+                        'Pending' => 'bi-clock-fill',
+                        'Rejected', 'Cancelled' => 'bi-x-circle-fill',
+                        default => 'bi-circle-fill',
                     };
                 @endphp
 
                 <div class="d-flex align-items-center gap-3">
 
-                    <div class="d-flex align-items-center justify-content-center"
-                         style="
-                            width: 52px;
-                            height: 52px;
-                            border-radius: 50%;
-                            background: {{ $statusStyle['bg'] }};
-                         ">
-                        <i class="bi {{ $statusStyle['icon'] }}"
-                           style="
-                                color: {{ $statusStyle['color'] }};
-                                font-size: 1.3rem;
-                           "></i>
+                    <div class="d-flex align-items-center justify-content-center status-icon status-{{ $statusClass }}">
+                        <i class="bi {{ $statusIcon }}"></i>
                     </div>
 
                     <div>
@@ -250,13 +222,7 @@
                             Status
                         </div>
 
-                        <span class="badge px-3 py-2"
-                              style="
-                                background: {{ $statusStyle['bg'] }};
-                                color: {{ $statusStyle['color'] }};
-                                border-radius: 8px;
-                                font-weight: 600;
-                              ">
+                        <span class="badge status-badge status-{{ $statusClass }}">
                             {{ $request->status }}
                         </span>
                     </div>

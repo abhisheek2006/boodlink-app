@@ -823,9 +823,6 @@
 
         }
 
-
-        @stack('styles')
-
     </style>
 
 </head>
@@ -914,7 +911,20 @@
                         class="btn btn-sm btn-outline-secondary dropdown-toggle"
                         data-bs-toggle="dropdown">
 
-                        <i class="bi bi-person-circle me-1"></i>
+                        @if (auth()->user()->profile_photo)
+
+                            <img
+                                src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->profile_photo) }}"
+                                alt="{{ auth()->user()->name }}"
+                                class="rounded-circle me-1"
+                                style="width:22px;height:22px;object-fit:cover;"
+                            >
+
+                        @else
+
+                            <i class="bi bi-person-circle me-1"></i>
+
+                        @endif
 
                         <span class="d-none d-sm-inline">
                             {{ auth()->user()->name }}
@@ -924,6 +934,48 @@
 
 
                     <ul class="dropdown-menu dropdown-menu-end">
+
+                        <li>
+
+                            <div class="dropdown-header d-flex align-items-center gap-2 py-2">
+
+                                @if (auth()->user()->profile_photo)
+
+                                    <img
+                                        src="{{ \Illuminate\Support\Facades\Storage::url(auth()->user()->profile_photo) }}"
+                                        alt="{{ auth()->user()->name }}"
+                                        class="rounded-circle"
+                                        style="width:34px;height:34px;object-fit:cover;"
+                                    >
+
+                                @else
+
+                                    <i
+                                        class="bi bi-person-circle"
+                                        style="font-size:34px;color:#94a3b8;"
+                                    ></i>
+
+                                @endif
+
+                                <div class="lh-sm">
+
+                                    <div class="fw-bold" style="font-size:13px;">
+                                        {{ auth()->user()->name }}
+                                    </div>
+
+                                    <small class="text-muted" style="font-size:11px;">
+                                        {{ auth()->user()->email }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
 
                         <li>
                             <a
@@ -999,7 +1051,7 @@
 
 
                 <a
-                    href="{{ route('register') }}"
+                    href="{{ route('register.donor') }}"
                     class="btn btn-primary btn-sm">
 
                     <i class="bi bi-heart-pulse me-1"></i>
@@ -1402,6 +1454,12 @@
      PASSWORD TOGGLE + GLOBAL ALERTS
 ========================================================= -->
 
+<div id="flashData"
+     class="d-none"
+     data-success="{{ session('success') }}"
+     data-error="{{ $errors->first() }}">
+</div>
+
 <script>
 
 document.addEventListener(
@@ -1476,14 +1534,22 @@ document.addEventListener(
 
         /* Success message */
 
-        @if (session('success'))
+        const flashData =
+            document.getElementById('flashData');
+
+        const flashSuccess =
+            flashData?.dataset.success || null;
+
+        const flashError =
+            flashData?.dataset.error || null;
+
+        if (flashSuccess) {
 
             Swal.fire({
 
                 icon: 'success',
 
-                title:
-                    @json(session('success')),
+                title: flashSuccess,
 
                 timer: 2500,
 
@@ -1491,27 +1557,24 @@ document.addEventListener(
 
             });
 
-        @endif
-
+        }
 
 
         /* Validation error */
 
-        @if ($errors->any())
+        if (flashError) {
 
             Swal.fire({
 
                 icon: 'error',
 
-                title:
-                    'Something needs your attention',
+                title: 'Something needs your attention',
 
-                text:
-                    @json($errors->first())
+                text: flashError
 
             });
 
-        @endif
+        }
 
     }
 );

@@ -946,11 +946,22 @@
 </div>
 
 
+<div id="analyticsEndpoints"
+     class="d-none"
+     data-blood-groups="{{ route('admin.analytics.blood-groups') }}"
+     data-monthly-donations="{{ route('admin.analytics.monthly-donations') }}"
+     data-availability="{{ route('admin.analytics.availability') }}"
+     data-top-cities="{{ route('admin.analytics.top-cities') }}">
+</div>
+
+
 @push('scripts')
 
 <script>
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    const ep = document.getElementById('analyticsEndpoints').dataset;
 
     /*
     |--------------------------------------------------------------------------
@@ -970,7 +981,7 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.blood-groups')), { credentials: 'same-origin' })
+    fetch(ep.bloodGroups, { credentials: 'same-origin' })
         .then(response => {
             if (!response.ok) throw new Error('Failed to load blood group data');
             return response.json();
@@ -1079,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.monthly-donations')), { credentials: 'same-origin' })
+    fetch(ep.monthlyDonations, { credentials: 'same-origin' })
         .then(response => {
             if (!response.ok) throw new Error('Failed to load donation data');
             return response.json();
@@ -1217,7 +1228,7 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.availability')), { credentials: 'same-origin' })
+    fetch(ep.availability, { credentials: 'same-origin' })
         .then(response => {
             if (!response.ok) throw new Error('Failed to load availability data');
             return response.json();
@@ -1315,7 +1326,7 @@ document.addEventListener('DOMContentLoaded', function () {
     |--------------------------------------------------------------------------
     */
 
-    fetch(@json(route('admin.analytics.top-cities')), { credentials: 'same-origin' })
+    fetch(ep.topCities, { credentials: 'same-origin' })
         .then(response => {
             if (!response.ok) throw new Error('Failed to load top cities data');
             return response.json();

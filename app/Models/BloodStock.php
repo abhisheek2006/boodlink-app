@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\BloodStockFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BloodStock extends Model
 {
-    /** @use HasFactory<\Database\Factories\BloodStockFactory> */
+    /** @use HasFactory<BloodStockFactory> */
     use HasFactory;
 
     protected $fillable = [

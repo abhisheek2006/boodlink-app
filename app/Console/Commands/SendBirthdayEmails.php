@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 class SendBirthdayEmails extends Command
 {
     protected $signature = 'birthdays:send';
+
     protected $description = 'Send birthday wish emails to all users celebrating a birthday today.';
 
     public function handle(): int
@@ -20,7 +21,7 @@ class SendBirthdayEmails extends Command
             ->where('email_verified_at', '!=', null)
             ->whereMonth('dob', now()->month)
             ->whereDay('dob', now()->day)
-            ->where(function ($q) use ($today) {
+            ->where(function ($q) {
                 // Only send once per birthday — guard against re-sending on a
                 // re-run by checking that the dob is this year-or-older.
                 $q->whereRaw("DATE_FORMAT(dob, '%Y') <=", now()->year);
@@ -29,6 +30,7 @@ class SendBirthdayEmails extends Command
 
         if ($users->isEmpty()) {
             $this->info('No birthdays today.');
+
             return self::SUCCESS;
         }
 
@@ -38,7 +40,7 @@ class SendBirthdayEmails extends Command
                 Mail::to($user->email)->send(new BirthdayWish($user));
                 $sent++;
             } catch (\Throwable $e) {
-                $this->warn("Failed to send to {$user->email}: " . $e->getMessage());
+                $this->warn("Failed to send to {$user->email}: ".$e->getMessage());
             }
         }
 

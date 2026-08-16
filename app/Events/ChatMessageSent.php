@@ -18,14 +18,12 @@ class ChatMessageSent implements ShouldBroadcastNow
 {
     use InteractsWithSockets, SerializesModels;
 
-    public function __construct(public ChatMessage $message)
-    {
-    }
+    public function __construct(public ChatMessage $message) {}
 
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('donation-session.' . $this->message->session_id),
+            new PrivateChannel('donation-session.'.$this->message->session_id),
         ];
     }
 

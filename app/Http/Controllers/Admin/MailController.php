@@ -27,10 +27,10 @@ class MailController extends Controller
             : null;
 
         $scopeCounts = [
-            'All'      => User::whereNotNull('email')->count(),
-            'Donors'   => User::where('role', 'Donor')->whereNotNull('email')->count(),
+            'All' => User::whereNotNull('email')->count(),
+            'Donors' => User::where('role', 'Donor')->whereNotNull('email')->count(),
             'Patients' => User::where('role', 'Patient')->whereNotNull('email')->count(),
-            'Admins'   => User::where('role', 'Admin')->whereNotNull('email')->count(),
+            'Admins' => User::where('role', 'Admin')->whereNotNull('email')->count(),
         ];
 
         return view('admin.mail.compose', compact('template', 'scopeCounts'));
@@ -39,9 +39,9 @@ class MailController extends Controller
     public function storeTemplate(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name'           => ['required', 'string', 'max:100'],
-            'subject'        => ['required', 'string', 'max:255'],
-            'body'           => ['required', 'string'],
+            'name' => ['required', 'string', 'max:100'],
+            'subject' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string'],
             'recipient_type' => ['required', 'in:All,Donors,Patients,Admins'],
         ]);
 
@@ -67,19 +67,19 @@ class MailController extends Controller
     public function send(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'subject'        => ['required', 'string', 'max:255'],
-            'body'           => ['required', 'string'],
+            'subject' => ['required', 'string', 'max:255'],
+            'body' => ['required', 'string'],
             'recipient_type' => ['required', 'in:All,Donors,Patients,Admins'],
-            'template_name'  => ['nullable', 'string', 'max:100'],
+            'template_name' => ['nullable', 'string', 'max:100'],
         ]);
 
         if ($request->boolean('save_template')) {
             MailTemplate::create([
-                'name'           => $request->input('template_name') ?: 'Untitled',
-                'subject'        => $data['subject'],
-                'body'           => $data['body'],
+                'name' => $request->input('template_name') ?: 'Untitled',
+                'subject' => $data['subject'],
+                'body' => $data['body'],
                 'recipient_type' => $data['recipient_type'],
-                'created_by'     => $request->user()->id,
+                'created_by' => $request->user()->id,
             ]);
         }
 
@@ -110,10 +110,10 @@ class MailController extends Controller
     protected function resolveRecipients(string $scope)
     {
         return match ($scope) {
-            'Donors'  => User::where('role', 'Donor')->whereNotNull('email')->get(),
+            'Donors' => User::where('role', 'Donor')->whereNotNull('email')->get(),
             'Patients' => User::where('role', 'Patient')->whereNotNull('email')->get(),
-            'Admins'  => User::where('role', 'Admin')->whereNotNull('email')->get(),
-            default   => User::whereNotNull('email')->get(),
+            'Admins' => User::where('role', 'Admin')->whereNotNull('email')->get(),
+            default => User::whereNotNull('email')->get(),
         };
     }
 }

@@ -19,8 +19,8 @@ class EnsureAccountIsActive
 
         if ($user && ($user->isBanned() || $user->isSuspended())) {
             $reason = $user->isBanned()
-                ? ('Your account has been banned. ' . ($user->ban_reason ?? ''))
-                : ('Your account is suspended. ' . ($user->suspension_reason ?? ''));
+                ? ('Your account has been banned. '.($user->ban_reason ?? ''))
+                : ('Your account is suspended. '.($user->suspension_reason ?? ''));
 
             Auth::logout();
             $request->session()->invalidate();

@@ -31,7 +31,7 @@ class DemoDataSeeder extends Seeder
                 'name' => "Donor Sample {$i}",
                 'email' => "donor{$i}@example.com",
                 'password' => Hash::make('password'),
-                'phone' => '90000' . str_pad((string) $i, 5, '0', STR_PAD_LEFT),
+                'phone' => '90000'.str_pad((string) $i, 5, '0', STR_PAD_LEFT),
                 'gender' => $i % 2 === 0 ? 'Female' : 'Male',
                 'dob' => now()->subYears(rand(18, 55))->toDateString(),
                 'status' => 'Active',
@@ -48,10 +48,10 @@ class DemoDataSeeder extends Seeder
                 'address' => "{$i} Sample Street",
                 'city' => $location['city'],
                 'state' => $location['state'],
-                'pincode' => '500' . str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+                'pincode' => '500'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
                 'availability' => 'Available',
                 'total_donations' => $totalDonations,
-                'current_badge' => (new Donor())->badgeForDonationCount($totalDonations),
+                'current_badge' => (new Donor)->badgeForDonationCount($totalDonations),
             ]);
         }
 
@@ -63,7 +63,7 @@ class DemoDataSeeder extends Seeder
                 'name' => "Patient Sample {$i}",
                 'email' => "patient{$i}@example.com",
                 'password' => Hash::make('password'),
-                'phone' => '80000' . str_pad((string) $i, 5, '0', STR_PAD_LEFT),
+                'phone' => '80000'.str_pad((string) $i, 5, '0', STR_PAD_LEFT),
                 'gender' => $i % 2 === 0 ? 'Female' : 'Male',
                 'dob' => now()->subYears(rand(18, 65))->toDateString(),
                 'status' => 'Active',
@@ -75,8 +75,8 @@ class DemoDataSeeder extends Seeder
                 'address' => "{$i} Sample Avenue",
                 'city' => $location['city'],
                 'state' => $location['state'],
-                'pincode' => '600' . str_pad((string) $i, 3, '0', STR_PAD_LEFT),
-                'emergency_contact' => '70000' . str_pad((string) $i, 5, '0', STR_PAD_LEFT),
+                'pincode' => '600'.str_pad((string) $i, 3, '0', STR_PAD_LEFT),
+                'emergency_contact' => '70000'.str_pad((string) $i, 5, '0', STR_PAD_LEFT),
                 'required_blood_group_id' => $bloodGroupIds[array_rand($bloodGroupIds)],
             ]);
         }

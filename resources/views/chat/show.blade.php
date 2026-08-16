@@ -549,29 +549,6 @@
                 </div>
 
 
-                {{-- Shared Contact --}}
-                @if ($session->contact_shared && ! $isDonorSide)
-
-                    <div class="contact-alert">
-
-                        <i class="bi bi-person-check-fill text-success me-1"></i>
-
-                        <strong>Donor contact details:</strong>
-
-                        <span class="ms-2">
-                            <i class="bi bi-telephone me-1"></i>
-                            {{ $session->donor->user->phone }}
-                        </span>
-
-                        <span class="ms-2">
-                            <i class="bi bi-envelope me-1"></i>
-                            {{ $session->donor->user->email }}
-                        </span>
-
-                    </div>
-
-                @endif
-
             @else
 
                 <div class="inactive-chat">
@@ -585,6 +562,30 @@
 
             @endif
 
+
+            {{-- Shared Contact --}}
+                @if ($session->contact_shared && ! $isDonorSide)
+
+                    <div class="contact-alert">
+
+                        <i class="bi bi-person-check-fill text-success me-1"></i>
+
+                        <strong>Donor contact details:</strong>
+
+                        <span class="ms-2">
+                            <i class="bi bi-telephone me-1"></i>
+                            {{ $session->donor->user->phone ?? 'N/A' }}
+                        </span>
+
+                        <span class="ms-2">
+                            <i class="bi bi-envelope me-1"></i>
+                            {{ $session->donor->user->email }}
+                        </span>
+
+                    </div>
+
+                @endif
+
         </div>
 
     </div>
@@ -592,12 +593,22 @@
 </div>
 
 
+<div id="chatData"
+     class="d-none"
+     data-session-id="{{ $session->id }}"
+     data-me-id="{{ $me->id }}"
+     data-seen-ids="{{ $session->chatMessages->pluck('id')->implode(',') }}">
+</div>
+
+
 @push('scripts')
 
 <script>
 
-    const sessionId = {{ $session->id }};
-    const meId = {{ $me->id }};
+    const chatData = document.getElementById('chatData').dataset;
+
+    const sessionId = parseInt(chatData.sessionId, 10);
+    const meId = parseInt(chatData.meId, 10);
     const chatBody = document.getElementById('chatBody');
 
     chatBody.scrollTop = chatBody.scrollHeight;
@@ -668,9 +679,11 @@
     // Track already-rendered message ids so real-time (Echo) and the polling
     // fallback never duplicate a message. Seed with the messages rendered
     // server-side on first load.
-    const seenMessageIds = new Set(
-        @json($session->chatMessages->isEmpty() ? [] : $session->chatMessages->modelKeys())
-    );
+    const seenIds = chatData.seenIds
+        ? chatData.seenIds.split(',').map(Number)
+        : [];
+
+    const seenMessageIds = new Set(seenIds);
 
     let lastSeenId = seenMessageIds.size ? Math.max(...seenMessageIds) : 0;
 
