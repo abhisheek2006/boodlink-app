@@ -24,7 +24,7 @@ class SendBirthdayEmails extends Command
             ->where(function ($q) {
                 // Only send once per birthday — guard against re-sending on a
                 // re-run by checking that the dob is this year-or-older.
-                $q->whereRaw("DATE_FORMAT(dob, '%Y') <=", now()->year);
+                $q->whereYear('dob', '<=', now()->year);
             })
             ->get();
 

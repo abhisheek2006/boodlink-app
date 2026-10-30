@@ -13,7 +13,7 @@ services:
     autoDeploy: true
     envVars:
       # Provide sensible defaults; override the real values in the Render
-      # dashboard (or via a PostgreSQL/MySQL add-on).
+      # dashboard.
       - key: APP_NAME
         value: Blood Link
       - key: APP_ENV
@@ -29,7 +29,18 @@ services:
       - key: LOG_LEVEL
         value: info
       - key: DB_CONNECTION
-        value: mysql
+        value: sqlite
+      # Pointed at /data (a dedicated mount) rather than /var/www/html/database,
+      # because a disk mounted over /var/www/html/database would shadow the
+      # migrations directory and break `artisan migrate` at boot.
+      - key: DB_DATABASE
+        value: /data/database.sqlite
+      - key: DB_FOREIGN_KEYS
+        value: "true"
+      - key: DB_JOURNAL_MODE
+        value: WAL
+      - key: DB_BUSY_TIMEOUT
+        value: "10000"
       - key: SESSION_DRIVER
         value: database
       - key: QUEUE_CONNECTION
@@ -40,3 +51,12 @@ services:
         value: local
       - key: MAIL_MAILER
         value: log
+    # SQLite is a file, so the container's filesystem must survive redeploys or
+    # every push wipes all data. Render disks are a PAID feature — if you are on
+    # `plan: free`, leave this commented out (data then resets on each redeploy)
+    # or upgrade and uncomment it.
+    #
+    # disk:
+    #   name: bloodlink-data
+    #   mountPath: /data
+    #   sizeGB: 1

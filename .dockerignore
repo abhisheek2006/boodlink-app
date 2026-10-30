@@ -35,5 +35,9 @@ docs
 
 # Misc
 *.log
+# database/database.sqlite is git-ignored and gets created by
+# docker-entrypoint.sh at boot — never bake a local DB into the image.
 *.sqlite
 *.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm

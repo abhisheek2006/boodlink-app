@@ -32,8 +32,9 @@ ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libzip-dev libonig-dev libxml2-dev libpng-dev libjpeg62-turbo-dev \
         libfreetype6-dev libicu-dev libpq-dev default-libmysqlclient-dev libwebp-dev \
+        libsqlite3-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
-    && docker-php-ext-install -j"$(nproc)" pdo_mysql pdo_pgsql gd mbstring exif pcntl bcmath zip opcache intl \
+    && docker-php-ext-install -j"$(nproc)" pdo_mysql pdo_pgsql pdo_sqlite sqlite3 gd mbstring exif pcntl bcmath zip opcache intl \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
@@ -59,7 +60,7 @@ COPY . .
 # Discover packages, link storage, fix permissions (app code now present)
 RUN php artisan package:discover --ansi \
     && php artisan storage:link --force \
-    && chown -R www-data:www-data storage bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache database \
     && chmod -R 775 storage bootstrap/cache
 
 COPY docker-entrypoint.sh /usr/local/bin/

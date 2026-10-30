@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\BloodRequest;
 use App\Models\DonationSession;
 use App\Models\Donor;
+use App\Support\DateExpr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
@@ -24,10 +25,12 @@ class AnalyticsController extends Controller
 
     public function monthlyDonations(): JsonResponse
     {
+        $month = DateExpr::month('ended_at');
+
         $data = DonationSession::where('status', 'Completed')
             ->whereNotNull('ended_at')
-            ->selectRaw("DATE_FORMAT(ended_at, '%Y-%m') as label, COUNT(*) as value")
-            ->groupByRaw("DATE_FORMAT(ended_at, '%Y-%m')")
+            ->selectRaw("{$month} as label, COUNT(*) as value")
+            ->groupByRaw($month)
             ->orderBy('label')
             ->get();
 
@@ -36,7 +39,9 @@ class AnalyticsController extends Controller
 
     public function monthlyRequests(): JsonResponse
     {
-        $data = BloodRequest::selectRaw("DATE_FORMAT(created_at, '%Y-%m') as label, COUNT(*) as value")
+        $month = DateExpr::month('created_at');
+
+        $data = BloodRequest::selectRaw("{$month} as label, COUNT(*) as value")
             ->groupBy('label')
             ->orderBy('label')
             ->get();

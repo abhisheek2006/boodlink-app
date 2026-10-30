@@ -8,6 +8,7 @@ use App\Models\BloodStock;
 use App\Models\DonationSession;
 use App\Models\Donor;
 use App\Models\Patient;
+use App\Support\DateExpr;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -93,7 +94,7 @@ class ReportController extends Controller
                     'Ended' => $s->ended_at?->toDateTimeString() ?? '—',
                 ]),
             'monthly-donations' => DB::table('donation_sessions')
-                ->selectRaw("DATE_FORMAT(ended_at, '%Y-%m') as month, COUNT(*) as total")
+                ->selectRaw(DateExpr::month('ended_at').' as month, COUNT(*) as total')
                 ->where('status', 'Completed')
                 ->groupBy('month')->orderBy('month')->get()->map(fn ($r) => (array) $r),
             'blood-group-distribution' => DB::table('donors')

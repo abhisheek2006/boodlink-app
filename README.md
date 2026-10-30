@@ -10,12 +10,47 @@ PDF/Excel report exports.
 
 ## Requirements
 
-- PHP 8.2+, Laravel 12, MySQL 8+
+- PHP 8.3+ (with `pdo_mysql`), Laravel 13, MySQL/MariaDB 10.4+
 - Composer packages not in a stock Laravel install — add these:
 
 ```bash
 composer require barryvdh/laravel-dompdf maatwebsite/excel laravel/reverb
 ```
+
+## Database
+
+The app uses **MySQL/MariaDB**. With XAMPP installed on `D:`, the server runs
+from `D:\xampp\mysql` and listens on port **3307** (3306 is used by the MySQL80
+Windows service).
+
+Create the database first (phpMyAdmin or the command line):
+
+```bash
+"D:/xampp/mysql/bin/mysql.exe" -u root -e "CREATE DATABASE blood_link CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+php artisan migrate
+php artisan db:seed
+```
+
+Relevant `.env` keys:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3307
+DB_DATABASE=blood_link
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Notes:
+
+- **XAMPP on `D:`:** `D:\xampp\mysql\bin\my.ini` and
+  `D:\xampp\mysql\data\my.ini` must point at `D:/xampp/...` (not `C:/xampp/...`)
+  and use `port=3307` in both the `[client]` and `[mysqld]` sections.
+- **Tests** still use an in-memory SQLite database (`phpunit.xml`), so they never
+  touch your MySQL data.
+- Driver-specific SQL must go through `App\Support\DateExpr` rather than
+  hand-written `DATE_FORMAT(...)`, which is MySQL-only.
 
 ## What's included
 
